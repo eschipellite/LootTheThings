@@ -3,11 +3,15 @@ package
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.GameInputEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.system.Capabilities;
+	import flash.ui.GameInput;
 	import General.Embedded_Content.EmbeddedImages_General;
 	import General.Embedded_Content.EmbeddedSounds_General;
 	import General.LocalData.LocalData;
@@ -15,8 +19,11 @@ package
 	import General.Statistics.StatisticsHandler;
 	import Utils.FPS;
 	import Utils.GameTime;
+	import Utils.InputContent.Controllers.Input_GameController;
 	import Utils.InputContent.Input;
 	import Utils.InputContent.Mouse;
+	import Utils.Output.Console;
+	import Utils.Output.Events.ConsoleEvent;
 	
 	/**
 	 * ...
@@ -24,22 +31,38 @@ package
 	 */
 	public class Main extends Sprite
 	{		
+		private static var m_Stage:Stage;
+		
 		private var m_FPS:FPS;
 		
 		private var m_StateHandler:StateHandler;
 		
-		private static var m_Stage:Stage;
+		private var m_Console:Console;
+		
+		private var m_GameInput:GameInput;
+		
+		private static var m_Inset:Point = new Point(0, 0);
+		
+		private static var m_SafeArea:Point = new Point(0, 0);
 		
 		public function Main():void 
 		{	
 			m_Stage = stage;
 			
-			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.scaleMode = StageScaleMode.NO_BORDER;
 			stage.align = StageAlign.TOP_LEFT;
+			stage.stageWidth = Capabilities.screenResolutionX;
+			stage.stageHeight = Capabilities.screenResolutionY;
+			m_SafeArea.x = stage.stageWidth;
+			m_SafeArea.y = stage.stageHeight;
+			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			stage.addEventListener(Event.RESIZE, eh_Resize);
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			
 			GameTime.InitializeGameTime();
 			m_FPS = new FPS();
+			m_Console = new Console();
+			m_GameInput = new GameInput();
 			
 			LocalData.SetClassAliases();
 			
@@ -67,11 +90,14 @@ package
 			EmbeddedImages_General.LoadImages();
 			EmbeddedSounds_General.LoadSounds();
 			
+			m_Console.Initialize();
 			m_StateHandler.Initialize();
 			
 			initializeEventListeners();
 			
 			this.addChild(m_StateHandler);
+			
+			this.addChild(m_Console);
 			
 			this.addChild(m_FPS);
 		}
@@ -85,11 +111,26 @@ package
 			stage.addEventListener(Event.ENTER_FRAME, mousePositionListener);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelListener);
 			
+			m_GameInput.addEventListener(GameInputEvent.DEVICE_ADDED, eh_AddController);
+			m_GameInput.addEventListener(GameInputEvent.DEVICE_REMOVED, eh_RemoveController);
+			
 			stage.addEventListener(Event.ENTER_FRAME, update);
 			
+			m_Console.InitializeEventListeners();
 			m_StateHandler.InitializeEventListeners();
 			
 			StatisticsHandler.InitializeEventListeners();
+		}
+		
+		private function eh_Resize(evt:Event):void
+		{
+			if ((Capabilities.screenResolutionX == stage.stageWidth) && (Capabilities.screenResolutionY == stage.stageHeight)) 
+			{
+				m_Inset.x = .075 * Capabilities.screenResolutionX;
+				m_Inset.y = .075 * Capabilities.screenResolutionY;
+				m_SafeArea.x = Capabilities.screenResolutionX - (2 * m_Inset.x);
+				m_SafeArea.y = Capabilities.screenResolutionY - (2 * m_Inset.y);
+			}
 		}
 		
 		private function keyDownListener(e:KeyboardEvent):void
@@ -122,6 +163,16 @@ package
 			Input.UpdateMouseWheel(e.delta);
 		}
 		
+		private function eh_AddController(evt:GameInputEvent):void
+		{
+			Input_GameController.AddController(evt.device);
+		}
+		
+		private function eh_RemoveController(evt:GameInputEvent):void
+		{
+			Input_GameController.RemoveController(evt.device);
+		}
+		
 		private function startGame():void
 		{
 			CONFIG::debug
@@ -140,7 +191,13 @@ package
 			
 			Input.Update();
 			
+			Input_GameController.Update();
+			
+			m_Console.Update();
+			
 			LocalData.Update();
+			
+			Console.eventDispatcher.dispatchEvent(new ConsoleEvent(ConsoleEvent.WRITE_TO_CONSOLE_EVENT, "Hello, how are you doing? Is this enough screen space? Blah Blah Blah Blah Blah Blah Hello, how are you doing? Is this enouth r?"));
 		}
 		
 		public static function get StageSize():Point
