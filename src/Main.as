@@ -12,6 +12,7 @@ package
 	import flash.geom.Point;
 	import flash.system.Capabilities;
 	import flash.ui.GameInput;
+	import flash.ui.Keyboard;
 	import General.Embedded_Content.EmbeddedImages_General;
 	import General.Embedded_Content.EmbeddedSounds_General;
 	import General.LocalData.LocalData;
@@ -19,11 +20,11 @@ package
 	import General.Statistics.StatisticsHandler;
 	import Utils.FPS;
 	import Utils.GameTime;
-	import Utils.InputContent.Controllers.Input_GameController;
+	import Utils.InputContent.Controllers.ControllerInput;
 	import Utils.InputContent.Input;
 	import Utils.InputContent.Mouse;
 	import Utils.Output.Console;
-	import Utils.Output.Events.ConsoleEvent;
+	import flash.system.fscommand;
 	
 	/**
 	 * ...
@@ -41,23 +42,27 @@ package
 		
 		private var m_GameInput:GameInput;
 		
-		private static var m_Inset:Point = new Point(0, 0);
+		private static var ms_Inset:Point;
+		private static var ms_ScreenArea:Point;
 		
-		private static var m_SafeArea:Point = new Point(0, 0);
+		private var m_InsetRatio:Number = .075;
 		
 		public function Main():void 
 		{	
 			m_Stage = stage;
-			
-			stage.scaleMode = StageScaleMode.NO_BORDER;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
-			stage.stageWidth = Capabilities.screenResolutionX;
-			stage.stageHeight = Capabilities.screenResolutionY;
-			m_SafeArea.x = stage.stageWidth;
-			m_SafeArea.y = stage.stageHeight;
-			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			
+			CONFIG::release
+			{
+				stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			}
+			
 			stage.addEventListener(Event.RESIZE, eh_Resize);
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
+			stage.addEventListener(Event.FULLSCREEN, eh_FullScreen);
+			
+			eh_Resize(null);
 			
 			GameTime.InitializeGameTime();
 			m_FPS = new FPS();
@@ -93,6 +98,8 @@ package
 			m_Console.Initialize();
 			m_StateHandler.Initialize();
 			
+			ControllerInput.Initialize();
+			
 			initializeEventListeners();
 			
 			this.addChild(m_StateHandler);
@@ -116,7 +123,6 @@ package
 			
 			stage.addEventListener(Event.ENTER_FRAME, update);
 			
-			m_Console.InitializeEventListeners();
 			m_StateHandler.InitializeEventListeners();
 			
 			StatisticsHandler.InitializeEventListeners();
@@ -124,12 +130,27 @@ package
 		
 		private function eh_Resize(evt:Event):void
 		{
-			if ((Capabilities.screenResolutionX == stage.stageWidth) && (Capabilities.screenResolutionY == stage.stageHeight)) 
+			ms_Inset = new Point(0, 0);
+			
+			CONFIG::debug
 			{
-				m_Inset.x = .075 * Capabilities.screenResolutionX;
-				m_Inset.y = .075 * Capabilities.screenResolutionY;
-				m_SafeArea.x = Capabilities.screenResolutionX - (2 * m_Inset.x);
-				m_SafeArea.y = Capabilities.screenResolutionY - (2 * m_Inset.y);
+				ms_ScreenArea = new Point(stage.stageWidth, stage.stageHeight);
+			}
+			
+			CONFIG::release
+			{
+				ms_ScreenArea = new Point(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
+			}
+			
+			ms_Inset.x = m_InsetRatio * ms_ScreenArea.x;
+			ms_Inset.y = m_InsetRatio * ms_ScreenArea.y;
+		}
+		
+		private function eh_FullScreen(evt:Event):void
+		{
+			if (stage.displayState != StageDisplayState.FULL_SCREEN)
+			{
+				fscommand("quit");
 			}
 		}
 		
@@ -165,12 +186,12 @@ package
 		
 		private function eh_AddController(evt:GameInputEvent):void
 		{
-			Input_GameController.AddController(evt.device);
+			ControllerInput.AddController(evt.device);
 		}
 		
 		private function eh_RemoveController(evt:GameInputEvent):void
 		{
-			Input_GameController.RemoveController(evt.device);
+			ControllerInput.RemoveController(evt.device);
 		}
 		
 		private function startGame():void
@@ -189,20 +210,28 @@ package
 			
 			m_StateHandler.Update();
 			
-			Input.Update();
-			
-			Input_GameController.Update();
-			
 			m_Console.Update();
 			
 			LocalData.Update();
 			
-			Console.eventDispatcher.dispatchEvent(new ConsoleEvent(ConsoleEvent.WRITE_TO_CONSOLE_EVENT, "Hello, how are you doing? Is this enough screen space? Blah Blah Blah Blah Blah Blah Hello, how are you doing? Is this enouth r?"));
+			if (Input.Pressed(Keyboard.ESCAPE))
+			{
+				fscommand("quit");
+			}
+			
+			Input.Update();
+			
+			ControllerInput.Update();
 		}
 		
-		public static function get StageSize():Point
+		public static function get Inset():Point
 		{
-			return new Point(m_Stage.stageWidth, m_Stage.stageHeight);
+			return new Point(ms_Inset.x, ms_Inset.y);
+		}
+		
+		public static function get ScreenArea():Point
+		{
+			return new Point(ms_ScreenArea.x, ms_ScreenArea.y);
 		}
 	}
 }

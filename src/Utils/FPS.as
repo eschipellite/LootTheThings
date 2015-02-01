@@ -5,7 +5,10 @@ package Utils
 	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import Gameplay.Player.EmbeddedImages_Player;
 	import Utils.GameTime;
+	import Utils.ImageContent.Image;
+	import Utils.ImageContent.ImageLoader;
 	
 	public class FPS extends Sprite
 	{	
@@ -19,7 +22,6 @@ package Utils
 			m_TextField = new TextField();
 			
 			var textFormat:TextFormat = new TextFormat();
-			textFormat.color = "0xFFFFFF";
 			
 			m_TextField.defaultTextFormat = textFormat;
 			
