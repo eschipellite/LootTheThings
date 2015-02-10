@@ -4,6 +4,8 @@ package General.Embedded_Content
 	import Gameplay.Player.EmbeddedImages_Player;
 	import Menu.Main.EmbeddedImages_Main;
 	import Menu.Options.EmbeddedImages_Options;
+	import Menu.PlayerSelection.EmbeddedImages_PlayerSelection;
+	import Menu.Setup.EmbeddedImages_Setup;
 	import Utils.ImageContent.ImageLoader;
 	/**
 	 * ...
@@ -23,6 +25,8 @@ package General.Embedded_Content
 			EmbeddedImages_Gameplay.LoadImages();
 			EmbeddedImages_Options.LoadImages();
 			EmbeddedImages_Player.LoadImages();
+			EmbeddedImages_Setup.LoadImages();
+			EmbeddedImages_PlayerSelection.LoadImages();
 		}
 	}
 }

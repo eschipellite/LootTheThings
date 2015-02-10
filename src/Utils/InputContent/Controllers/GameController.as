@@ -70,6 +70,11 @@ package Utils.InputContent.Controllers
 			return m_Index;
 		}
 		
+		public function get Connected():Boolean
+		{
+			return m_GameInputDevice != null;
+		}
+		
 		public function Update():void
 		{
 			checkButtons();

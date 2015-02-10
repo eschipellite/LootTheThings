@@ -1,36 +1,35 @@
-package Menu.Options 
+package Menu.PlayerSelection 
 {
 	import General.States.GameState;
 	import Menu.Main.Buttons.MenuButton;
 	import Menu.MenuScroller;
 	import Menu.Buttons.BackToMainButton;
+	import Menu.Setup.Buttons.NewGameButton;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
 	/**
 	 * ...
 	 * @author EvanSchipellite
 	 */
-	public class State_Options extends GameState
+	public class State_PlayerSelection extends GameState
 	{	
 		private var m_Background:Image;
 		
-		private var m_MenuScroller:MenuScroller;
+		private var m_PlayerSelector:PlayerSelector;
 		
-		public function State_Options() 
+		public function State_PlayerSelection() 
 		{
-			m_MenuScroller = new MenuScroller();
+			m_PlayerSelector = new PlayerSelector();
 		}
 		
 		public override function Initialize():void
 		{
-			m_Background = ImageLoader.GetImage(EmbeddedImages_Options.Options_Background);
+			m_Background = ImageLoader.GetImage(EmbeddedImages_PlayerSelection.PlayerSelection_Background);
 			
-			var menuButtons:Vector.<MenuButton> = new Vector.<MenuButton>();
-			menuButtons.push(new BackToMainButton());
-			m_MenuScroller.Initialize(menuButtons);
+			m_PlayerSelector.Initialize();
 			
 			this.addChild(m_Background);
-			this.addChild(m_MenuScroller);
+			this.addChild(m_PlayerSelector);
 		}
 		
 		public override function InitializeEventListeners():void
@@ -39,7 +38,7 @@ package Menu.Options
 		
 		public override function Update():void
 		{
-			m_MenuScroller.Update();
+			m_PlayerSelector.Update();
 		}
 		
 		public override function Begin():void
@@ -54,7 +53,7 @@ package Menu.Options
 		
 		private function reset():void
 		{
-			m_MenuScroller.Reset();
+			m_PlayerSelector.Reset();
 		}
 	}
 }

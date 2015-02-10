@@ -50,6 +50,8 @@ package
 		
 		private static var ms_OnConsole:Boolean = false;
 		
+		private static const ms_MaxPlayers:int = 4;
+		
 		public function Main():void 
 		{	
 			m_Stage = stage;
@@ -241,6 +243,11 @@ package
 		public static function get IsOnConsole():Boolean
 		{
 			return ms_OnConsole;
+		}
+		
+		public static function get MaxPlayers():int
+		{
+			return ms_MaxPlayers;
 		}
 	}
 }

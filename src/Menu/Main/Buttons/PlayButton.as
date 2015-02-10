@@ -18,7 +18,7 @@ package Menu.Main.Buttons
 		
 		override public function DoAction():void
 		{
-			StateHandler.eventDispatcher.dispatchEvent(new StateEvent(StateEvent.MOVE_TO_STATE_EVENT, StateValues.STATE_GAMEPLAY));
+			StateHandler.eventDispatcher.dispatchEvent(new StateEvent(StateEvent.MOVE_TO_STATE_EVENT, StateValues.STATE_SETUP));
 		}
 	}
 }

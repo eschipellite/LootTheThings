@@ -8,9 +8,7 @@ package Gameplay.Player
 	 * @author ...
 	 */
 	public class PlayerHandler extends Sprite
-	{
-		private static const MAX_PLAYERS:int = 4;
-		
+	{	
 		private var m_Players:Vector.<Player>;
 		
 		public function PlayerHandler() 
@@ -38,7 +36,7 @@ package Gameplay.Player
 		
 		private function createPlayers():void
 		{
-			for (var index:int = 0; index < MAX_PLAYERS; index++)
+			for (var index:int = 0; index < Main.MaxPlayers; index++)
 			{
 				var player:Player = new Player();
 				

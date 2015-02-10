@@ -1,4 +1,4 @@
-package Menu.Options.Butons 
+package Menu.Buttons 
 {
 	import General.States.StateEvent;
 	import General.States.StateHandler;
