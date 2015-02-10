@@ -21,6 +21,7 @@ package
 	import Utils.FPS;
 	import Utils.GameTime;
 	import Utils.InputContent.Controllers.ControllerInput;
+	import Utils.InputContent.Controllers.GameController;
 	import Utils.InputContent.Input;
 	import Utils.InputContent.Mouse;
 	import Utils.Output.Console;
@@ -47,15 +48,19 @@ package
 		
 		private var m_InsetRatio:Number = .075;
 		
+		private static var ms_OnConsole:Boolean = false;
+		
 		public function Main():void 
 		{	
 			m_Stage = stage;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.scaleMode = StageScaleMode.EXACT_FIT;
+			//stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
 			CONFIG::release
 			{
-				stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				//stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				ms_OnConsole = true;
 			}
 			
 			stage.addEventListener(Event.RESIZE, eh_Resize);
@@ -132,15 +137,18 @@ package
 		{
 			ms_Inset = new Point(0, 0);
 			
-			CONFIG::debug
+			ms_ScreenArea = new Point(stage.stageWidth, stage.stageHeight);
+			
+			/*CONFIG::debug
 			{
 				ms_ScreenArea = new Point(stage.stageWidth, stage.stageHeight);
 			}
 			
 			CONFIG::release
 			{
-				ms_ScreenArea = new Point(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
-			}
+				ms_ScreenArea = new Point(stage.stageWidth, stage.stageHeight);
+				//ms_ScreenArea = new Point(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
+			}*/
 			
 			ms_Inset.x = m_InsetRatio * ms_ScreenArea.x;
 			ms_Inset.y = m_InsetRatio * ms_ScreenArea.y;
@@ -196,10 +204,12 @@ package
 		
 		private function startGame():void
 		{
-			CONFIG::debug
+			m_FPS.Start();
+			
+			/*CONFIG::debug
 			{
 				m_FPS.Start();
-			}
+			}*/
 			
 			m_StateHandler.StartGame();
 		}
@@ -232,6 +242,11 @@ package
 		public static function get ScreenArea():Point
 		{
 			return new Point(ms_ScreenArea.x, ms_ScreenArea.y);
+		}
+		
+		public static function get IsOnConsole():Boolean
+		{
+			return ms_OnConsole;
 		}
 	}
 }

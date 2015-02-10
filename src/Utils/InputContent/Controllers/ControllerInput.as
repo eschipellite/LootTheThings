@@ -76,6 +76,11 @@ package Utils.InputContent.Controllers
 			return ms_GameControllers[controllerIndex];
 		}
 		
+		public static function GetAllControllers():Vector.<GameController>
+		{
+			return ms_GameControllers;
+		}
+		
 		private static function setControllerType(controllerName:String, controllerIndex:int):GameController
 		{
 			switch(controllerName)

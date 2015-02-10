@@ -4,6 +4,7 @@ package General.States
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import Gameplay.State_Gameplay;
+	import Menu.Main.State_Main;
 	
 	/**
 	 * ...
@@ -11,6 +12,7 @@ package General.States
 	 */
 	public class StateHandler extends Sprite
 	{
+		private var m_State_Main:State_Main;
 		private var m_State_Gameplay:State_Gameplay;
 		
 		private var m_State_Active:GameState;
@@ -19,6 +21,7 @@ package General.States
 		
 		public function StateHandler()
 		{
+			m_State_Main = new State_Main();
 			m_State_Gameplay = new State_Gameplay();
 			
 			m_State_Active = new GameState();
@@ -26,6 +29,7 @@ package General.States
 		
 		public function Initialize():void
 		{
+			m_State_Main.Initialize();
 			m_State_Gameplay.Initialize();
 		}
 		
@@ -33,12 +37,13 @@ package General.States
 		{
 			eventDispatcher.addEventListener(StateEvent.MOVE_TO_STATE_EVENT, eh_CheckMoveToState);
 			
+			m_State_Main.InitializeEventListeners();
 			m_State_Gameplay.InitializeEventListeners();
 		}
 		
 		public function StartGame():void
 		{
-			m_State_Active = m_State_Gameplay;
+			m_State_Active = m_State_Main;
 			
 			m_State_Active.Begin();
 			
@@ -63,6 +68,9 @@ package General.States
 				
 				switch (evt.E_State)
 				{
+					case StateValues.STATE_MAIN:
+						m_State_Active = m_State_Main;
+						break;
 					case StateValues.STATE_GAMEPLAY:
 						m_State_Active = m_State_Gameplay;
 						break;

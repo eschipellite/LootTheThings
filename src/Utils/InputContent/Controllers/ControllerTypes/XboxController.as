@@ -22,6 +22,8 @@ package Utils.InputContent.Controllers.ControllerTypes
 			m_ControllerButtons[BUTTON_B].Index = 6;
 			m_ControllerButtons[BUTTON_C].Index = 7;
 			m_ControllerButtons[BUTTON_D].Index = 5;
+			m_ControllerButtons[LEFT_STICK_UP].Test = -1;
+			m_ControllerButtons[LEFT_STICK_DOWN].Test = 1;
 		}
 		
 		override public function get LeftStick():Point

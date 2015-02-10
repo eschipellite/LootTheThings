@@ -27,11 +27,19 @@ package Utils.InputContent.Controllers
 		public static const BUTTON_B:String = "BUTTON_B";
 		public static const BUTTON_C:String = "BUTTON_C";
 		public static const BUTTON_D:String = "BUTTON_D";
+		public static const LEFT_STICK_UP:String = "LEFT_STICK_UP";
+		public static const LEFT_STICK_DOWN:String = "LEFT_STICK_DOWN";
+		public static const LEFT_STICK_LEFT:String = "LEFT_STICK_LEFT";
+		public static const LEFT_STICK_RIGHT:String = "LEFT_STICK_RIGHT";
+		
+		protected var ms_IsOnConsole:Boolean;
 		
 		public function GameController(index:int) 
 		{
 			m_GameInputDevice = null;
 			m_Index = index;
+			
+			ms_IsOnConsole = Main.IsOnConsole;
 			
 			m_ControllerButtons[RIGHT_BUMPER] = new ControllerButton(19);
 			m_ControllerButtons[LEFT_BUMPER] = new ControllerButton(18);
@@ -41,6 +49,10 @@ package Utils.InputContent.Controllers
 			m_ControllerButtons[BUTTON_B] = new ControllerButton(7);
 			m_ControllerButtons[BUTTON_C] = new ControllerButton(8);
 			m_ControllerButtons[BUTTON_D] = new ControllerButton(9);
+			m_ControllerButtons[LEFT_STICK_UP] = new ControllerButton(1);
+			m_ControllerButtons[LEFT_STICK_DOWN] = new ControllerButton(1, -1);
+			m_ControllerButtons[LEFT_STICK_LEFT] = new ControllerButton(0, -1);
+			m_ControllerButtons[LEFT_STICK_RIGHT] = new ControllerButton(0);
 		}
 		
 		public function set Device(device:GameInputDevice):void
@@ -71,7 +83,7 @@ package Utils.InputContent.Controllers
 				{
 					var state:Number = m_GameInputDevice.getControlAt(controllerButton.Index).value;
 					
-					if (state != 1)
+					if (state != controllerButton.Test)
 					{
 						controllerButton.Down = false;
 						controllerButton.Pressed = false;
