@@ -15,7 +15,7 @@ package Utils.InputContent.Controllers.ControllerTypes
 		{
 			super(index);
 			
-			if (ms_IsOnConsole)
+			if (m_IsOnConsole)
 			{
 				m_ControllerButtons[RIGHT_BUMPER].Index = 5;
 				m_ControllerButtons[LEFT_BUMPER].Index = 20;
@@ -30,7 +30,7 @@ package Utils.InputContent.Controllers.ControllerTypes
 		
 		override public function get DPad():Point
 		{
-			if (!ms_IsOnConsole)
+			if (!m_IsOnConsole)
 			{
 				return super.DPad;
 			}

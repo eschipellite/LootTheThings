@@ -1,6 +1,8 @@
 package Menu.Main.Buttons 
 {
 	import flash.desktop.NativeApplication;
+	import flash.display.NativeWindow;
+	import flash.system.Capabilities;
 	import flash.system.fscommand;
 	import Menu.Main.EmbeddedImages_Main;
 	import Utils.Output.Console;
@@ -23,7 +25,14 @@ package Menu.Main.Buttons
 			}
 			else
 			{
-				fscommand("quit");
+				if (Capabilities.playerType == 'Desktop')
+				{
+					NativeApplication.nativeApplication.exit();
+				}
+				else
+				{
+					fscommand("quit");
+				}
 			}
 		}
 	}

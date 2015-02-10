@@ -15,7 +15,7 @@ package Utils.InputContent.Controllers
 		
 		protected var m_Index:int;
 		
-		protected var m_DeadZone:Number = .1;
+		protected var m_DeadZone:Number = .2;
 		
 		protected var m_ControllerButtons:Dictionary = new Dictionary();
 		
@@ -32,14 +32,14 @@ package Utils.InputContent.Controllers
 		public static const LEFT_STICK_LEFT:String = "LEFT_STICK_LEFT";
 		public static const LEFT_STICK_RIGHT:String = "LEFT_STICK_RIGHT";
 		
-		protected var ms_IsOnConsole:Boolean;
+		protected var m_IsOnConsole:Boolean;
 		
 		public function GameController(index:int) 
 		{
 			m_GameInputDevice = null;
 			m_Index = index;
 			
-			ms_IsOnConsole = Main.IsOnConsole;
+			m_IsOnConsole = Main.IsOnConsole;
 			
 			m_ControllerButtons[RIGHT_BUMPER] = new ControllerButton(19);
 			m_ControllerButtons[LEFT_BUMPER] = new ControllerButton(18);

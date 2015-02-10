@@ -1,6 +1,11 @@
 package Menu.Main 
 {
 	import General.States.GameState;
+	import Menu.Main.Buttons.ExitButton;
+	import Menu.Main.Buttons.MenuButton;
+	import Menu.Main.Buttons.OptionsButton;
+	import Menu.Main.Buttons.PlayButton;
+	import Menu.MenuScroller;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
 	/**
@@ -22,7 +27,12 @@ package Menu.Main
 		{
 			m_Background = ImageLoader.GetImage(EmbeddedImages_Main.Main_Background);
 			
-			m_MenuScroller.Initialize();
+			var menuButtons:Vector.<MenuButton> = new Vector.<MenuButton>();
+			menuButtons.push(new PlayButton());
+			menuButtons.push(new OptionsButton());
+			menuButtons.push(new ExitButton());
+			
+			m_MenuScroller.Initialize(menuButtons);
 			
 			this.addChild(m_Background);
 			this.addChild(m_MenuScroller);

@@ -27,13 +27,13 @@ package Utils.Output
 		public function Initialize():void
 		{
 			var textFormat:TextFormat = new TextFormat();
-			textFormat.align = TextFormatAlign.RIGHT;
-			textFormat.size = 36;
+			textFormat.align = TextFormatAlign.LEFT;
+			textFormat.size = 24;
 			
 			m_ConsoleText.defaultTextFormat = textFormat;
 			m_ConsoleText.width = Main.ScreenArea.x;
 			
-			m_ConsoleText.autoSize = "right";
+			m_ConsoleText.autoSize = "left";
 			
 			m_ConsoleText.wordWrap = true;
 			m_ConsoleText.selectable = false;

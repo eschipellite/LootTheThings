@@ -5,6 +5,7 @@ package General.States
 	import flash.events.IEventDispatcher;
 	import Gameplay.State_Gameplay;
 	import Menu.Main.State_Main;
+	import Menu.Options.State_Options;
 	
 	/**
 	 * ...
@@ -14,6 +15,7 @@ package General.States
 	{
 		private var m_State_Main:State_Main;
 		private var m_State_Gameplay:State_Gameplay;
+		private var m_State_Options:State_Options;
 		
 		private var m_State_Active:GameState;
 		
@@ -23,6 +25,7 @@ package General.States
 		{
 			m_State_Main = new State_Main();
 			m_State_Gameplay = new State_Gameplay();
+			m_State_Options = new State_Options();
 			
 			m_State_Active = new GameState();
 		}
@@ -31,6 +34,7 @@ package General.States
 		{
 			m_State_Main.Initialize();
 			m_State_Gameplay.Initialize();
+			m_State_Options.Initialize();
 		}
 		
 		public function InitializeEventListeners():void
@@ -39,6 +43,7 @@ package General.States
 			
 			m_State_Main.InitializeEventListeners();
 			m_State_Gameplay.InitializeEventListeners();
+			m_State_Options.InitializeEventListeners();
 		}
 		
 		public function StartGame():void
@@ -73,6 +78,9 @@ package General.States
 						break;
 					case StateValues.STATE_GAMEPLAY:
 						m_State_Active = m_State_Gameplay;
+						break;
+					case StateValues.STATE_OPTIONS:
+						m_State_Active = m_State_Options;
 						break;
 				}
 				

@@ -3,6 +3,7 @@ package Utils.InputContent.Controllers
 	import flash.ui.GameInputDevice;
 	import Utils.InputContent.Controllers.ControllerTypes.ControllerTypes;
 	import Utils.InputContent.Controllers.ControllerTypes.OuyaController;
+	import Utils.InputContent.Controllers.ControllerTypes.PlayStationController;
 	import Utils.InputContent.Controllers.ControllerTypes.XboxController;
 	import Utils.Output.Console;
 	/**
@@ -87,6 +88,8 @@ package Utils.InputContent.Controllers
 			{
 				case ControllerTypes.XBOX_STANDARD:
 					return new XboxController(controllerIndex);
+				case ControllerTypes.PLAYSTATION_STANDARD:
+					return new PlayStationController(controllerIndex);
 					break;
 				default:
 					return new OuyaController(controllerIndex);

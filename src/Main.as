@@ -146,8 +146,7 @@ package
 			
 			CONFIG::release
 			{
-				ms_ScreenArea = new Point(stage.stageWidth, stage.stageHeight);
-				//ms_ScreenArea = new Point(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
+				ms_ScreenArea = new Point(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
 			}*/
 			
 			ms_Inset.x = m_InsetRatio * ms_ScreenArea.x;
@@ -205,11 +204,6 @@ package
 		private function startGame():void
 		{
 			m_FPS.Start();
-			
-			/*CONFIG::debug
-			{
-				m_FPS.Start();
-			}*/
 			
 			m_StateHandler.StartGame();
 		}
