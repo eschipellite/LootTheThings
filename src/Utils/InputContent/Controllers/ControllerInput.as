@@ -32,7 +32,7 @@ package Utils.InputContent.Controllers
 			var controllerIndex:int = -1;
 			
 			for (var index:int = 0; index < ms_GameControllers.length; index++)
-			{
+			{				
 				if (ms_GameControllers[index].Device == null)
 				{
 					ms_GameControllers[index] = setControllerType(gameInputDevice.name, ms_GameControllers[index].Index);
@@ -65,7 +65,10 @@ package Utils.InputContent.Controllers
 		
 		public static function Update():void
 		{
-			
+			for each(var controller:GameController in ms_GameControllers)
+			{
+				controller.Update();
+			}
 		}
 		
 		public static function GetController(controllerIndex:int):GameController

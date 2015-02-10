@@ -2,6 +2,7 @@ package Gameplay.Player
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.ui.GameInput;
 	import flash.ui.GameInputControl;
 	import Utils.GameTime;
 	import Utils.ImageContent.Image;
@@ -43,11 +44,7 @@ package Gameplay.Player
 		
 		private function checkInput():void
 		{
-			var gameController:GameController = ControllerInput.GetController(0);
-			
 			var movement:Point = ControllerInput.GetController(m_Index).LeftStick;
-			
-			trace(movement);
 			
 			m_Image_Player.x += movement.x * GameTime.ElapsedGameTimeSeconds * m_Speed;
 			m_Image_Player.y += movement.y * GameTime.ElapsedGameTimeSeconds * m_Speed;

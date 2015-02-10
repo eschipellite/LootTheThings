@@ -13,16 +13,66 @@ package Utils.InputContent.Controllers.ControllerTypes
 		public function XboxController(index:int) 
 		{
 			super(index);
+			
+			m_ControllerButtons[RIGHT_BUMPER].Index = 11;
+			m_ControllerButtons[LEFT_BUMPER].Index = 10;
+			m_ControllerButtons[RIGHT_TRIGGER].Index = 9;
+			m_ControllerButtons[LEFT_TRIGGER].Index = 8;
+			m_ControllerButtons[BUTTON_A].Index = 4;
+			m_ControllerButtons[BUTTON_B].Index = 6;
+			m_ControllerButtons[BUTTON_C].Index = 7;
+			m_ControllerButtons[BUTTON_D].Index = 5;
 		}
 		
 		override public function get LeftStick():Point
 		{
+			var direction:Point = super.LeftStick;
+			
+			direction.y *= -1;
+			
+			return direction;
+		}
+		
+		override public function get RightStick():Point
+		{
 			if (m_GameInputDevice != null)
 			{
-				var leftStickX:Number = checkDeadZone(m_GameInputDevice.getControlAt(0).value);
-				var leftStickY:Number = checkDeadZone(m_GameInputDevice.getControlAt(1).value);
+				var rightStickX:Number = checkDeadZone(m_GameInputDevice.getControlAt(2).value);
+				var rightStickY:Number = checkDeadZone(m_GameInputDevice.getControlAt(3).value);
 				
-				return new Point(leftStickX, -leftStickY);
+				return new Point(rightStickX, -rightStickY);
+			}
+			
+			return new Point(0, 0);
+		}
+		
+		override public function get DPad():Point
+		{
+			if (m_GameInputDevice != null)
+			{
+				var direction:Point = new Point(0, 0);
+				
+				if (m_GameInputDevice.getControlAt(17).value == 1)
+				{
+					direction.y += 1;
+				}
+				
+				if (m_GameInputDevice.getControlAt(16).value == 1)
+				{
+					direction.y -= 1;
+				}
+				
+				if (m_GameInputDevice.getControlAt(18).value == 1)
+				{
+					direction.x -= 1;
+				}
+				
+				if (m_GameInputDevice.getControlAt(19).value == 1)
+				{
+					direction.x += 1;
+				}
+				
+				return direction;
 			}
 			
 			return new Point(0, 0);

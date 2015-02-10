@@ -2,6 +2,8 @@ package Utils.InputContent.Controllers
 {
 	import flash.geom.Point;
 	import flash.ui.GameInputDevice;
+	import flash.utils.Dictionary;
+	import Utils.Output.Console;
 	import Utils.UtilMethods;
 	/**
 	 * ...
@@ -15,10 +17,30 @@ package Utils.InputContent.Controllers
 		
 		protected var m_DeadZone:Number = .1;
 		
+		protected var m_ControllerButtons:Dictionary = new Dictionary();
+		
+		public static const RIGHT_BUMPER:String = "RIGHT_BUMPER";
+		public static const LEFT_BUMPER:String = "LEFT_BUMPER";
+		public static const RIGHT_TRIGGER:String = "RIGHT_TRIGGER";
+		public static const LEFT_TRIGGER:String = "LEFT_TRIGGER";
+		public static const BUTTON_A:String = "BUTTON_A";
+		public static const BUTTON_B:String = "BUTTON_B";
+		public static const BUTTON_C:String = "BUTTON_C";
+		public static const BUTTON_D:String = "BUTTON_D";
+		
 		public function GameController(index:int) 
 		{
 			m_GameInputDevice = null;
 			m_Index = index;
+			
+			m_ControllerButtons[RIGHT_BUMPER] = new ControllerButton(19);
+			m_ControllerButtons[LEFT_BUMPER] = new ControllerButton(18);
+			m_ControllerButtons[RIGHT_TRIGGER] = new ControllerButton(11);
+			m_ControllerButtons[LEFT_TRIGGER] = new ControllerButton(10);
+			m_ControllerButtons[BUTTON_A] = new ControllerButton(6);
+			m_ControllerButtons[BUTTON_B] = new ControllerButton(7);
+			m_ControllerButtons[BUTTON_C] = new ControllerButton(8);
+			m_ControllerButtons[BUTTON_D] = new ControllerButton(9);
 		}
 		
 		public function set Device(device:GameInputDevice):void
@@ -36,6 +58,35 @@ package Utils.InputContent.Controllers
 			return m_Index;
 		}
 		
+		public function Update():void
+		{
+			checkButtons();
+		}
+		
+		protected function checkButtons():void
+		{
+			if (m_GameInputDevice != null)
+			{
+				for each(var controllerButton:ControllerButton in m_ControllerButtons)
+				{
+					var state:Number = m_GameInputDevice.getControlAt(controllerButton.Index).value;
+					
+					if (state != 1)
+					{
+						controllerButton.Down = false;
+						controllerButton.Pressed = false;
+						controllerButton.Up = true;
+					}
+					else
+					{
+						controllerButton.Down = true;
+						controllerButton.Pressed = controllerButton.Down && controllerButton.Up;
+						controllerButton.Up = false;
+					}
+				}
+			}
+		}
+		
 		public function get LeftStick():Point
 		{
 			if (m_GameInputDevice != null)
@@ -47,6 +98,71 @@ package Utils.InputContent.Controllers
 			}
 			
 			return new Point(0, 0);
+		}
+		
+		public function get RightStick():Point
+		{
+			if (m_GameInputDevice != null)
+			{
+				var rightStickX:Number = checkDeadZone(m_GameInputDevice.getControlAt(3).value);
+				var rightStickY:Number = checkDeadZone(m_GameInputDevice.getControlAt(4).value);
+				
+				return new Point(rightStickX, rightStickY);
+			}
+			
+			return new Point(0, 0);
+		}
+		
+		public function get DPad():Point
+		{
+			if (m_GameInputDevice != null)
+			{
+				var direction:Point = new Point(0, 0);
+				
+				if (m_GameInputDevice.getControlAt(14).value == 1)
+				{
+					direction.y += 1;
+				}
+				
+				if (m_GameInputDevice.getControlAt(15).value == 1)
+				{
+					direction.y -= 1;
+				}
+				
+				if (m_GameInputDevice.getControlAt(16).value == 1)
+				{
+					direction.x -= 1;
+				}
+				
+				if (m_GameInputDevice.getControlAt(17).value == 1)
+				{
+					direction.x += 1;
+				}
+				
+				return direction;
+			}
+			
+			return new Point(0, 0);
+		}
+		
+		public function ButtonPressed(buttonName:String):Boolean
+		{
+			if (m_ControllerButtons[buttonName])
+			{
+				return m_ControllerButtons[buttonName].Pressed;
+			}
+			
+			return false;
+		}
+		
+		public function ButtonDown(buttonName:String):Boolean
+		{
+			if (m_ControllerButtons[buttonName])
+			{
+				return m_ControllerButtons[buttonName].Down;
+			}
+			
+			return false;
 		}
 		
 		protected function checkDeadZone(value:Number):Number
