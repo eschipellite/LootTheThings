@@ -2,6 +2,11 @@ package Menu.PlayerSelection
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import General.States.StateEvent;
+	import General.States.StateHandler;
+	import General.States.StateValues;
+	import Menu.PlayerSelection.Events.PlayerInformationEvent;
+	import Menu.PlayerSelection.Events.PlayerSelectorEvent;
 	import Utils.InputContent.Controllers.ControllerInput;
 	/**
 	 * ...
@@ -27,6 +32,17 @@ package Menu.PlayerSelection
 			}
 			
 			createPlayerInformation();
+		}
+		
+		public function InitializeEventListeners():void
+		{
+			State_PlayerSelection.eventDispatcher.addEventListener(PlayerSelectorEvent.LEAVE_PLAYER_SELECTION_EVENT, eh_LeavePlayerSelection);
+		}
+		
+		private function eh_LeavePlayerSelection(evt:PlayerSelectorEvent):void
+		{
+			State_PlayerSelection.eventDispatcher.dispatchEvent(new PlayerInformationEvent(PlayerInformationEvent.SEND_PLAYER_INFORMATION_EVENT, m_PlayerInformation));
+			StateHandler.eventDispatcher.dispatchEvent(new StateEvent(StateEvent.MOVE_TO_STATE_EVENT, StateValues.STATE_GAMEPLAY));
 		}
 		
 		private function createPlayerInformation():void

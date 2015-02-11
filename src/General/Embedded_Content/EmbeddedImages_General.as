@@ -1,10 +1,13 @@
 package General.Embedded_Content 
 {
+	import Gameplay.Collectibles.EmbeddedImages_Collectibles;
 	import Gameplay.EmbeddedImages_Gameplay;
 	import Gameplay.Player.EmbeddedImages_Player;
 	import Menu.Main.EmbeddedImages_Main;
 	import Menu.Options.EmbeddedImages_Options;
 	import Menu.PlayerSelection.EmbeddedImages_PlayerSelection;
+	import Menu.EmbeddedImages_MenuShared;
+	import Menu.Results.EmbeddedImages_Results;
 	import Menu.Setup.EmbeddedImages_Setup;
 	import Utils.ImageContent.ImageLoader;
 	/**
@@ -21,12 +24,16 @@ package General.Embedded_Content
 		{	
 			ImageLoader.InitializeImage(General_NullButton, 2);
 			
+			EmbeddedImages_MenuShared.LoadImages();
 			EmbeddedImages_Main.LoadImages();
 			EmbeddedImages_Gameplay.LoadImages();
 			EmbeddedImages_Options.LoadImages();
-			EmbeddedImages_Player.LoadImages();
 			EmbeddedImages_Setup.LoadImages();
 			EmbeddedImages_PlayerSelection.LoadImages();
+			EmbeddedImages_Results.LoadImages();
+			
+			EmbeddedImages_Player.LoadImages();
+			EmbeddedImages_Collectibles.LoadImages();
 		}
 	}
 }

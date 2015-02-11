@@ -2,6 +2,7 @@ package Gameplay.Player
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import Menu.PlayerSelection.PlayerInformation;
 	import Utils.UtilMethods;
 	/**
 	 * ...
@@ -18,7 +19,6 @@ package Gameplay.Player
 		
 		public function Initialize():void
 		{
-			createPlayers();
 		}
 		
 		public function InitializeEventListeners():void
@@ -34,16 +34,21 @@ package Gameplay.Player
 			}
 		}
 		
+		public function Begin():void
+		{
+			createPlayers();
+		}
+		
+		public function Leave():void
+		{
+			removePlayers();
+		}
+		
 		private function createPlayers():void
 		{
-			for (var index:int = 0; index < Main.MaxPlayers; index++)
+			for each(var player:Player in m_Players)
 			{
-				var player:Player = new Player();
-				
-				player.Initialize(index);
 				player.SetPosition(getRandomPlayerPosition(player.Size));
-				
-				m_Players.push(player);
 				this.addChild(player);
 			}
 		}
@@ -56,6 +61,34 @@ package Gameplay.Player
 			screenPosition.y = UtilMethods.RandomRange(0, Main.ScreenArea.y - playerSize.y);
 			
 			return screenPosition;
+		}
+		
+		private function removePlayers():void
+		{
+			for each(var player:Player in m_Players)
+			{
+				if (this.contains(player))
+				{
+					this.removeChild(player);
+				}
+			}
+			
+			m_Players = new Vector.<Player>();
+		}
+		
+		public function SetPlayerInformation(playerInformation:Vector.<PlayerInformation>):void
+		{
+			removePlayers();
+			
+			for each(var playerInfo:PlayerInformation in playerInformation)
+			{
+				if (playerInfo.InGame)
+				{
+					var player:Player = new Player();
+					player.Initialize(playerInfo.Index);
+					m_Players.push(player);
+				}
+			}
 		}
 	}
 }

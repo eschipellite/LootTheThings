@@ -2,8 +2,11 @@ package Gameplay.Player
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.ui.GameInput;
 	import flash.ui.GameInputControl;
+	import Gameplay.Player.Events.PlayerCollisionEvent;
+	import Gameplay.State_Gameplay;
 	import Utils.GameTime;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
@@ -40,6 +43,13 @@ package Gameplay.Player
 		public function Update():void
 		{
 			checkInput();
+			
+			checkCollectibleCollision();
+		}
+		
+		private function checkCollectibleCollision():void
+		{
+			State_Gameplay.eventDispatcher.dispatchEvent(new PlayerCollisionEvent(PlayerCollisionEvent.CHECK_COLLECTIBLE_COLLISION_EVENT, this));
 		}
 		
 		private function checkInput():void
@@ -59,6 +69,16 @@ package Gameplay.Player
 		public function get Size():Point
 		{
 			return new Point(m_Image_Player.FrameWidth, m_Image_Player.FrameHeight);
+		}
+		
+		public function get CollisionBounds():Rectangle
+		{
+			return m_Image_Player.CollisionBounds;
+		}
+		
+		public function get Index():int
+		{
+			return m_Index;
 		}
 	}
 }

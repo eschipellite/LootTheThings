@@ -44,7 +44,7 @@ package
 		private var m_GameInput:GameInput;
 		
 		private static var ms_Inset:Point;
-		private static var ms_ScreenArea:Point;
+		private static var ms_ScreenArea:Point = new Point(1280, 720);
 		
 		private var m_InsetRatio:Number = .075;
 		
@@ -139,7 +139,7 @@ package
 		{
 			ms_Inset = new Point(0, 0);
 			
-			ms_ScreenArea = new Point(stage.stageWidth, stage.stageHeight);
+			//ms_ScreenArea = new Point(stage.stageWidth, stage.stageHeight);
 			
 			/*CONFIG::debug
 			{

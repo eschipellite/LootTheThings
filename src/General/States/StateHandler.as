@@ -7,6 +7,7 @@ package General.States
 	import Menu.Main.State_Main;
 	import Menu.Options.State_Options;
 	import Menu.PlayerSelection.State_PlayerSelection;
+	import Menu.Results.State_Results;
 	import Menu.Setup.State_Setup;
 	
 	/**
@@ -20,6 +21,7 @@ package General.States
 		private var m_State_Options:State_Options;
 		private var m_State_Setup:State_Setup;
 		private var m_State_PlayerSelection:State_PlayerSelection;
+		private var m_State_Results:State_Results;
 		
 		private var m_State_Active:GameState;
 		
@@ -32,6 +34,7 @@ package General.States
 			m_State_Options = new State_Options();
 			m_State_Setup = new State_Setup();
 			m_State_PlayerSelection = new State_PlayerSelection();
+			m_State_Results = new State_Results();
 			
 			m_State_Active = new GameState();
 		}
@@ -43,6 +46,7 @@ package General.States
 			m_State_Options.Initialize();
 			m_State_Setup.Initialize();
 			m_State_PlayerSelection.Initialize();
+			m_State_Results.Initialize();
 		}
 		
 		public function InitializeEventListeners():void
@@ -54,6 +58,7 @@ package General.States
 			m_State_Options.InitializeEventListeners();
 			m_State_Setup.InitializeEventListeners();
 			m_State_PlayerSelection.InitializeEventListeners();
+			m_State_Results.InitializeEventListeners();
 		}
 		
 		public function StartGame():void
@@ -97,6 +102,9 @@ package General.States
 						break;
 					case StateValues.STATE_PLAYERSELECTION:
 						m_State_Active = m_State_PlayerSelection;
+						break;
+					case StateValues.STATE_RESULTS:
+						m_State_Active = m_State_Results;
 						break;
 				}
 				

@@ -44,8 +44,6 @@ package Utils.InputContent.Controllers
 					break;
 				}
 			}
-			
-			Console.AddOutput("Controller " + controllerIndex.toString() + " added", 10);
 		}
 		
 		public static function RemoveController(gameInputDevice:GameInputDevice):void
@@ -60,8 +58,6 @@ package Utils.InputContent.Controllers
 					controllerIndex = ms_GameControllers[index].Index + 1;
 				}
 			}
-			
-			Console.AddOutput("Controller " + controllerIndex.toString() + " removed", 10);
 		}
 		
 		public static function Update():void

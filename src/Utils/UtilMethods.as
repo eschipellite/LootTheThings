@@ -11,7 +11,7 @@ package Utils
 	{
 		public static function RandomRange(min:Number, max:Number = 0):Number
 		{
-			return Math.random() * (max + 1 - min) + min;
+			return Math.random() * (max - min) + min;
 		}
 		
 		public static function LerpToPoint(start:Point, end:Point, lerpAmount:Number):Point

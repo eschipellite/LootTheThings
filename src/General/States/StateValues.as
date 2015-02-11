@@ -10,5 +10,6 @@ package General.States {
 		public static const STATE_OPTIONS:int = 2;
 		public static const STATE_SETUP:int = 3;
 		public static const STATE_PLAYERSELECTION:int = 4;
+		public static const STATE_RESULTS:int = 5;
 	}
 }

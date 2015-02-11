@@ -4,7 +4,7 @@ package Menu.Buttons
 	import General.States.StateHandler;
 	import General.States.StateValues;
 	import Menu.Main.Buttons.MenuButton;
-	import Menu.Options.EmbeddedImages_Options;
+	import Menu.EmbeddedImages_MenuShared;
 	/**
 	 * ...
 	 * @author ...
@@ -13,7 +13,7 @@ package Menu.Buttons
 	{
 		public function BackToMainButton() 
 		{
-			m_ImageClass = EmbeddedImages_Options.Options_BackToMain;
+			m_ImageClass = EmbeddedImages_MenuShared.MenuShared_BackToMain;
 		}
 		
 		override public function DoAction():void

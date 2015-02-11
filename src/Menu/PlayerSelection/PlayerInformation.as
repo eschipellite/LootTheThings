@@ -2,9 +2,11 @@ package Menu.PlayerSelection
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import Gameplay.State_Gameplay;
 	import General.States.StateEvent;
 	import General.States.StateHandler;
 	import General.States.StateValues;
+	import Menu.PlayerSelection.Events.PlayerSelectorEvent;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
 	import Utils.InputContent.Controllers.ControllerInput;
@@ -80,11 +82,16 @@ package Menu.PlayerSelection
 		
 		private function checkJoin():void
 		{
-			if (m_ConnectionState == ConnectionState.CONNECTED)
+			if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.BUTTON_A))
 			{
-				if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.BUTTON_A))
+				switch(m_ConnectionState)
 				{
-					m_ConnectionState = ConnectionState.READY;
+					case ConnectionState.CONNECTED:
+						m_ConnectionState = ConnectionState.READY;
+						break;
+					case ConnectionState.READY:
+						State_PlayerSelection.eventDispatcher.dispatchEvent(new PlayerSelectorEvent(PlayerSelectorEvent.LEAVE_PLAYER_SELECTION_EVENT));
+						break;
 				}
 			}
 		}
@@ -103,6 +110,16 @@ package Menu.PlayerSelection
 						break;
 				}
 			}
+		}
+		
+		public function get InGame():Boolean
+		{
+			return m_ConnectionState == ConnectionState.READY;
+		}
+		
+		public function get Index():int
+		{
+			return m_Index;
 		}
 	}
 }

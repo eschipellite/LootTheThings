@@ -1,5 +1,7 @@
 package Menu.PlayerSelection 
 {
+	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	import General.States.GameState;
 	import Menu.Main.Buttons.MenuButton;
 	import Menu.MenuScroller;
@@ -13,6 +15,8 @@ package Menu.PlayerSelection
 	 */
 	public class State_PlayerSelection extends GameState
 	{	
+		private static var g_eventDispatcher:IEventDispatcher = new EventDispatcher();
+		
 		private var m_Background:Image;
 		
 		private var m_PlayerSelector:PlayerSelector;
@@ -34,6 +38,7 @@ package Menu.PlayerSelection
 		
 		public override function InitializeEventListeners():void
 		{
+			m_PlayerSelector.InitializeEventListeners();
 		}
 		
 		public override function Update():void
@@ -54,6 +59,11 @@ package Menu.PlayerSelection
 		private function reset():void
 		{
 			m_PlayerSelector.Reset();
+		}
+		
+		public static function get eventDispatcher():IEventDispatcher
+		{
+			return g_eventDispatcher;
 		}
 	}
 }
