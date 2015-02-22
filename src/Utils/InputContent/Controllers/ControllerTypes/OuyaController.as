@@ -25,6 +25,10 @@ package Utils.InputContent.Controllers.ControllerTypes
 				m_ControllerButtons[BUTTON_B].Index = 16;
 				m_ControllerButtons[BUTTON_C].Index = 17;
 				m_ControllerButtons[BUTTON_D].Index = 15;
+				m_ControllerButtons[DPAD_UP].Index = 11;
+				m_ControllerButtons[DPAD_DOWN].Index = 10;
+				m_ControllerButtons[DPAD_LEFT].Index = 12;
+				m_ControllerButtons[DPAD_RIGHT].Index = 13;
 			}
 		}
 		

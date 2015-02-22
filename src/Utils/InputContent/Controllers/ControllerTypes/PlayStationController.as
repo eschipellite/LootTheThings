@@ -23,6 +23,14 @@ package Utils.InputContent.Controllers.ControllerTypes
 			m_ControllerButtons[BUTTON_B].Index = 20;
 			m_ControllerButtons[BUTTON_C].Index = 21;
 			m_ControllerButtons[BUTTON_D].Index = 19;
+			m_ControllerButtons[RIGHT_STICK_UP].Index = 3;
+			m_ControllerButtons[RIGHT_STICK_DOWN].Index = 3;
+			m_ControllerButtons[RIGHT_STICK_LEFT].Index = 2;
+			m_ControllerButtons[RIGHT_STICK_RIGHT].Index = 2;
+			m_ControllerButtons[DPAD_UP].Index = 15;
+			m_ControllerButtons[DPAD_DOWN].Index = 14;
+			m_ControllerButtons[DPAD_LEFT].Index = 16;
+			m_ControllerButtons[DPAD_RIGHT].Index = 17;
 		}
 		
 		override public function get RightStick():Point
@@ -32,7 +40,10 @@ package Utils.InputContent.Controllers.ControllerTypes
 				var rightStickX:Number = checkDeadZone(m_GameInputDevice.getControlAt(2).value);
 				var rightStickY:Number = checkDeadZone(m_GameInputDevice.getControlAt(3).value);
 				
-				return new Point(rightStickX, rightStickY);
+				var direction:Point = new Point(rightStickX, rightStickY);
+				direction.normalize(1);
+				
+				return direction;
 			}
 			
 			return new Point(0, 0);

@@ -1,6 +1,5 @@
 package General.Embedded_Content 
 {
-	import Gameplay.Collectibles.EmbeddedImages_Collectibles;
 	import Gameplay.EmbeddedImages_Gameplay;
 	import Gameplay.Player.EmbeddedImages_Player;
 	import Menu.Main.EmbeddedImages_Main;
@@ -33,7 +32,6 @@ package General.Embedded_Content
 			EmbeddedImages_Results.LoadImages();
 			
 			EmbeddedImages_Player.LoadImages();
-			EmbeddedImages_Collectibles.LoadImages();
 		}
 	}
 }

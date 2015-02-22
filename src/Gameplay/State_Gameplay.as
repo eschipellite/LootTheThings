@@ -3,7 +3,6 @@ package Gameplay
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
-	import Gameplay.Collectibles.CollectibleSpawner;
 	import Gameplay.HUD.GameHUD;
 	import Gameplay.Player.Player;
 	import Gameplay.Player.PlayerHandler;
@@ -23,14 +22,12 @@ package Gameplay
 		private var m_Background:Image;
 		
 		private var m_PlayerHandler:PlayerHandler;
-		private var m_CollectibleSpawner:CollectibleSpawner;
 		
 		private var m_GameHUD:GameHUD;
 		
 		public function State_Gameplay() 
 		{
 			m_PlayerHandler = new PlayerHandler();
-			m_CollectibleSpawner = new CollectibleSpawner();
 			m_GameHUD = new GameHUD();
 		}
 		
@@ -39,11 +36,9 @@ package Gameplay
 			m_Background = ImageLoader.GetImage(EmbeddedImages_Gameplay.Gameplay_Background);
 			
 			m_PlayerHandler.Initialize();
-			m_CollectibleSpawner.Initialize();
 			m_GameHUD.Initialize();
 			
 			this.addChild(m_Background);
-			this.addChild(m_CollectibleSpawner);
 			this.addChild(m_PlayerHandler);
 			this.addChild(m_GameHUD);
 		}
@@ -54,13 +49,11 @@ package Gameplay
 			
 			m_PlayerHandler.InitializeEventListeners();
 			m_GameHUD.InitializeEventListeners();
-			m_CollectibleSpawner.InitializeEventListeners();
 		}
 		
 		public override function Update():void
 		{
 			m_PlayerHandler.Update();
-			m_CollectibleSpawner.Update();
 			
 			m_GameHUD.Update();
 		}
@@ -68,7 +61,6 @@ package Gameplay
 		public override function Begin():void
 		{
 			m_PlayerHandler.Begin();
-			m_CollectibleSpawner.Begin();
 			
 			m_GameHUD.Begin();
 		}
@@ -76,7 +68,6 @@ package Gameplay
 		public override function Leave():void
 		{
 			m_PlayerHandler.Leave();
-			m_CollectibleSpawner.Leave();
 			
 			m_GameHUD.Leave();
 		}

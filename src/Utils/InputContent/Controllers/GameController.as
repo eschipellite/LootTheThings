@@ -31,6 +31,14 @@ package Utils.InputContent.Controllers
 		public static const LEFT_STICK_DOWN:String = "LEFT_STICK_DOWN";
 		public static const LEFT_STICK_LEFT:String = "LEFT_STICK_LEFT";
 		public static const LEFT_STICK_RIGHT:String = "LEFT_STICK_RIGHT";
+		public static const RIGHT_STICK_UP:String = "RIGHT_STICK_UP";
+		public static const RIGHT_STICK_DOWN:String = "RIGHT_STICK_DOWN";
+		public static const RIGHT_STICK_LEFT:String = "RIGHT_STICK_LEFT";
+		public static const RIGHT_STICK_RIGHT:String = "RIGHT_STICK_RIGHT";
+		public static const DPAD_UP:String = "DPAD_UP";
+		public static const DPAD_DOWN:String = "DPAD_DOWN";
+		public static const DPAD_LEFT:String = "DPAD_LEFT";
+		public static const DPAD_RIGHT:String = "DPAD_RIGHT";
 		
 		protected var m_IsOnConsole:Boolean;
 		
@@ -53,6 +61,14 @@ package Utils.InputContent.Controllers
 			m_ControllerButtons[LEFT_STICK_DOWN] = new ControllerButton(1, -1);
 			m_ControllerButtons[LEFT_STICK_LEFT] = new ControllerButton(0, -1);
 			m_ControllerButtons[LEFT_STICK_RIGHT] = new ControllerButton(0);
+			m_ControllerButtons[RIGHT_STICK_UP] = new ControllerButton(4);
+			m_ControllerButtons[RIGHT_STICK_DOWN] = new ControllerButton(4, -1);
+			m_ControllerButtons[RIGHT_STICK_LEFT] = new ControllerButton(3, -1);
+			m_ControllerButtons[RIGHT_STICK_RIGHT] = new ControllerButton(3);
+			m_ControllerButtons[DPAD_UP] = new ControllerButton(14);
+			m_ControllerButtons[DPAD_DOWN] = new ControllerButton(15);
+			m_ControllerButtons[DPAD_LEFT] = new ControllerButton(16);
+			m_ControllerButtons[DPAD_RIGHT] = new ControllerButton(17);
 		}
 		
 		public function set Device(device:GameInputDevice):void
@@ -111,7 +127,10 @@ package Utils.InputContent.Controllers
 				var leftStickX:Number = checkDeadZone(m_GameInputDevice.getControlAt(0).value);
 				var leftStickY:Number = checkDeadZone(m_GameInputDevice.getControlAt(1).value);
 				
-				return new Point(leftStickX, leftStickY);
+				var direction:Point = new Point(leftStickX, leftStickY);
+				direction.normalize(1);
+				
+				return direction;
 			}
 			
 			return new Point(0, 0);
@@ -124,7 +143,10 @@ package Utils.InputContent.Controllers
 				var rightStickX:Number = checkDeadZone(m_GameInputDevice.getControlAt(3).value);
 				var rightStickY:Number = checkDeadZone(m_GameInputDevice.getControlAt(4).value);
 				
-				return new Point(rightStickX, rightStickY);
+				var direction:Point = new Point(rightStickX, rightStickY);
+				direction.normalize(1);
+				
+				return direction;
 			}
 			
 			return new Point(0, 0);

@@ -5,7 +5,6 @@ package Gameplay.Player
 	import flash.geom.Rectangle;
 	import flash.ui.GameInput;
 	import flash.ui.GameInputControl;
-	import Gameplay.Player.Events.PlayerCollisionEvent;
 	import Gameplay.State_Gameplay;
 	import Utils.GameTime;
 	import Utils.ImageContent.Image;
@@ -43,13 +42,6 @@ package Gameplay.Player
 		public function Update():void
 		{
 			checkInput();
-			
-			checkCollectibleCollision();
-		}
-		
-		private function checkCollectibleCollision():void
-		{
-			State_Gameplay.eventDispatcher.dispatchEvent(new PlayerCollisionEvent(PlayerCollisionEvent.CHECK_COLLECTIBLE_COLLISION_EVENT, this));
 		}
 		
 		private function checkInput():void
