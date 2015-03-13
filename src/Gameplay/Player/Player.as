@@ -6,6 +6,7 @@ package Gameplay.Player
 	import flash.ui.GameInput;
 	import flash.ui.GameInputControl;
 	import Gameplay.State_Gameplay;
+	import General.Camera;
 	import Utils.GameTime;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
@@ -22,7 +23,7 @@ package Gameplay.Player
 		
 		private var m_Index:int;
 		
-		private var m_Speed:int = 256;
+		private var m_Speed:int = 512;
 		
 		public function Player() 
 		{

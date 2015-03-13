@@ -9,9 +9,31 @@ package Utils
 	
 	public class UtilMethods 
 	{
-		public static function RandomRange(min:Number, max:Number = 0):Number
+		public static const FLOOR:String = "floor";
+		public static const CEIL:String = "ceil";
+		public static const ROUND:String = "round";
+		
+		private static function RandomRange(min:Number, max:Number = 0):Number
 		{
 			return Math.random() * (max - min) + min;
+		}
+		
+		public static function Random(minValue:Number, maxValue:Number, params:String = ""):Number
+		{
+			if (params == FLOOR)
+			{
+				return Math.floor(RandomRange(minValue, maxValue));
+			}
+			else if (params == CEIL)
+			{
+				return Math.ceil(RandomRange(minValue, maxValue));
+			}
+			else if (params == ROUND)
+			{
+				return Math.round(RandomRange(minValue, maxValue));
+			}
+			else
+				return RandomRange(minValue, maxValue);
 		}
 		
 		public static function LerpToPoint(start:Point, end:Point, lerpAmount:Number):Point
