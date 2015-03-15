@@ -63,8 +63,7 @@ package General.States
 		
 		public function StartGame():void
 		{
-			//m_State_Active = m_State_Main;
-			m_State_Active = m_State_PlayerSelection;
+			m_State_Active = m_State_Main;
 			
 			m_State_Active.Begin();
 			

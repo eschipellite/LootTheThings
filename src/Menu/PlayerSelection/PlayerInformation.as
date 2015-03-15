@@ -6,6 +6,7 @@ package Menu.PlayerSelection
 	import General.States.StateEvent;
 	import General.States.StateHandler;
 	import General.States.StateValues;
+	import Menu.PlayerSelection.Events.LevelSelectorEvent;
 	import Menu.PlayerSelection.Events.PlayerSelectorEvent;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
@@ -42,10 +43,9 @@ package Menu.PlayerSelection
 		public function Update():void
 		{
 			checkConnected();
-			
 			checkJoin();
-			
 			checkReturn();
+			checkLevelSelection();
 			
 			refreshImage();
 		}
@@ -109,6 +109,37 @@ package Menu.PlayerSelection
 						m_ConnectionState = ConnectionState.CONNECTED;
 						break;
 				}
+			}
+		}
+		
+		private function checkLevelSelection():void
+		{
+			if (m_ConnectionState != ConnectionState.NOT_CONNECTED)
+			{
+				var direction:Point = new Point(0, 0);
+				
+				if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.DPAD_UP)) 
+				{
+					direction.y++;
+				}
+				
+				if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.DPAD_DOWN)) 
+				{
+					direction.y--;
+				}
+				
+				if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.DPAD_RIGHT)) 
+				{
+					direction.x++;
+				}
+				
+				if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.DPAD_LEFT)) 
+				{
+					direction.x--;
+				}
+				
+				State_PlayerSelection.eventDispatcher.dispatchEvent(new LevelSelectorEvent(LevelSelectorEvent.ADJUST_ROOM_NUMBER_EVENT, -direction.y));
+				State_PlayerSelection.eventDispatcher.dispatchEvent(new LevelSelectorEvent(LevelSelectorEvent.ADJUST_DIVERGENCE_EVENT, direction.x));
 			}
 		}
 		

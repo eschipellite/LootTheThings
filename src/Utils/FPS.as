@@ -22,6 +22,7 @@ package Utils
 			m_TextField = new TextField();
 			
 			var textFormat:TextFormat = new TextFormat();
+			textFormat.color = 0xffffff;
 			
 			m_TextField.defaultTextFormat = textFormat;
 			

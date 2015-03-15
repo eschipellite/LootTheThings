@@ -5,6 +5,7 @@ package Menu.PlayerSelection
 	import General.States.StateEvent;
 	import General.States.StateHandler;
 	import General.States.StateValues;
+	import Menu.PlayerSelection.Events.LevelSelectorEvent;
 	import Menu.PlayerSelection.Events.PlayerInformationEvent;
 	import Menu.PlayerSelection.Events.PlayerSelectorEvent;
 	import Utils.InputContent.Controllers.ControllerInput;
@@ -42,6 +43,7 @@ package Menu.PlayerSelection
 		private function eh_LeavePlayerSelection(evt:PlayerSelectorEvent):void
 		{
 			State_PlayerSelection.eventDispatcher.dispatchEvent(new PlayerInformationEvent(PlayerInformationEvent.SEND_PLAYER_INFORMATION_EVENT, m_PlayerInformation));
+			State_PlayerSelection.eventDispatcher.dispatchEvent(new LevelSelectorEvent(LevelSelectorEvent.LEAVE_LEVEL_SELECTION_EVENT));
 			StateHandler.eventDispatcher.dispatchEvent(new StateEvent(StateEvent.MOVE_TO_STATE_EVENT, StateValues.STATE_GAMEPLAY));
 		}
 		

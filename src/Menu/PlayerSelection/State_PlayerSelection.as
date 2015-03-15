@@ -20,10 +20,12 @@ package Menu.PlayerSelection
 		private var m_Background:Image;
 		
 		private var m_PlayerSelector:PlayerSelector;
+		private var m_LevelSelector:LevelSelector;
 		
 		public function State_PlayerSelection() 
 		{
 			m_PlayerSelector = new PlayerSelector();
+			m_LevelSelector = new LevelSelector();
 		}
 		
 		public override function Initialize():void
@@ -31,19 +33,23 @@ package Menu.PlayerSelection
 			m_Background = ImageLoader.GetImage(EmbeddedImages_PlayerSelection.PlayerSelection_Background);
 			
 			m_PlayerSelector.Initialize();
+			m_LevelSelector.Initialize();
 			
 			this.addChild(m_Background);
 			this.addChild(m_PlayerSelector);
+			this.addChild(m_LevelSelector);
 		}
 		
 		public override function InitializeEventListeners():void
 		{
 			m_PlayerSelector.InitializeEventListeners();
+			m_LevelSelector.InitializeEventListeners();
 		}
 		
 		public override function Update():void
 		{
 			m_PlayerSelector.Update();
+			m_LevelSelector.Update();
 		}
 		
 		public override function Begin():void
@@ -59,6 +65,7 @@ package Menu.PlayerSelection
 		private function reset():void
 		{
 			m_PlayerSelector.Reset();
+			m_LevelSelector.Reset();
 		}
 		
 		public static function get eventDispatcher():IEventDispatcher

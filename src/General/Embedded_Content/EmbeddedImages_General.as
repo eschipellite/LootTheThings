@@ -30,8 +30,6 @@ package General.Embedded_Content
 			EmbeddedImages_Setup.LoadImages();
 			EmbeddedImages_PlayerSelection.LoadImages();
 			EmbeddedImages_Results.LoadImages();
-			
-			EmbeddedImages_Player.LoadImages();
 		}
 	}
 }
