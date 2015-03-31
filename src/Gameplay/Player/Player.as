@@ -7,6 +7,7 @@ package Gameplay.Player
 	import flash.ui.GameInput;
 	import flash.ui.GameInputControl;
 	import Gameplay.EmbeddedImages_Gameplay;
+	import Gameplay.Enemy.Enemy;
 	import Gameplay.HUD.Events.HUDEvent;
 	import Gameplay.Level.Events.PlayerCollisionEvent;
 	import Gameplay.Level.RoomManager;
@@ -101,8 +102,17 @@ package Gameplay.Player
 		
 		private function move():void
 		{
+			m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
 			moveX();
 			moveY();
+			checkCollisionWithEnemies();
+			
+			RoomManager.CurrentTileGrid.SetPositionOccupiedFromWorld(this.Position);
+		}
+		
+		private function checkCollisionWithEnemies():void
+		{
+			State_Gameplay.eventDispatcher.dispatchEvent(new PlayerCollisionEvent(PlayerCollisionEvent.CHECK_PLAYER_COLLISION_WITH_ENEMIES_EVENT, this));
 		}
 		
 		private function checkAtExit():void
@@ -224,6 +234,21 @@ package Gameplay.Player
 			m_Bounds.y = position.y;
 		}
 		
+		public function CollisionWithEnemy(enemy:Enemy):void
+		{
+			var contactNormal:Point = new Point(enemy.CenterPosition.x - this.CenterPosition.x, enemy.CenterPosition.y - this.CenterPosition.y);
+			var centerAbs:Point = new Point(Math.abs(contactNormal.x), Math.abs(contactNormal.y));
+			var penetration:Point = new Point(centerAbs.x - (enemy.Size.x + this.Size.x) * 0.5, centerAbs.y - (enemy.Size.y + this.Size.y) * 0.5);
+			contactNormal.normalize(1);
+			
+			var movement:Point = new Point(contactNormal.x * penetration.x, contactNormal.y * penetration.y);
+			m_Image_Player.x += (movement.x);
+			m_Image_Player.y += (movement.y);
+			
+			checkXCollision();
+			checkYCollision();
+		}
+		
 		public function get Size():Point
 		{
 			return new Point(m_Image_Player.FrameWidth, m_Image_Player.FrameHeight);
@@ -237,6 +262,16 @@ package Gameplay.Player
 		public function get Index():int
 		{
 			return m_Index;
+		}
+		
+		public function get Position():Point
+		{
+			return new Point(m_Image_Player.x, m_Image_Player.y);
+		}
+		
+		public function get CenterPosition():Point
+		{
+			return new Point(m_Image_Player.x + m_Image_Player.FrameWidth * 0.5, m_Image_Player.y + m_Image_Player.FrameHeight * 0.5);
 		}
 	}
 }

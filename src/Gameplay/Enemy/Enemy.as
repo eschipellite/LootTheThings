@@ -2,14 +2,18 @@ package Gameplay.Enemy
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import Gameplay.EmbeddedImages_Gameplay;
+	import Gameplay.Level.Events.PlayerCollisionEvent;
 	import Gameplay.Level.RoomManager;
+	import Gameplay.Player.Player;
 	import Gameplay.State_Gameplay;
 	import Utils.GameTime;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
 	import Utils.Pathfinding.Node;
 	import Utils.Pathfinding.Path;
+	import Utils.UtilMethods;
 	/**
 	 * ...
 	 * @author Evan Schipellite
@@ -29,11 +33,15 @@ package Gameplay.Enemy
 		
 		private var m_State:int;
 		
+		private var m_TimeToPath:Number = 2;
+		private var m_CurrentTimeToPath:Number;
+		
 		public function Enemy() 
 		{
 			m_RoomGridPosition = new Point(0, 0);
 			m_RoomSize = new Point(0, 0);
 			m_CurrentNodePosition = new Point(0, 0);
+			m_CurrentTimeToPath = 0;
 		}	
 		
 		public function Initialize(gridPosition:Point, roomSize:Point):void
@@ -68,12 +76,19 @@ package Gameplay.Enemy
 		{
 			m_State = EnemyStates.RANDOM_PATHING;
 			
-			m_Path = RoomManager.CurrentTileGrid.FindPath(this.Position, RoomManager.CurrentTileGrid.GetRandomAvailablePosition());
+			findPath(RoomManager.CurrentTileGrid.GetRandomAvailablePosition());
+		}
+		
+		private function findPath(moveToPosition:Point):void
+		{
+			m_Path = RoomManager.CurrentTileGrid.FindPath(this.Position, moveToPosition);
 			
+			m_CurrentTimeToPath = 0;
 			if (m_Path.GetNodes().length > 1)
 			{
 				m_CurrentNode = 1;
 				m_CurrentNodePosition = m_Path.GetNodes()[m_CurrentNode].Position;
+				m_CurrentTimeToPath = 0;
 			}
 			else
 			{
@@ -88,15 +103,30 @@ package Gameplay.Enemy
 			direction.y = m_CurrentNodePosition.y - this.y;
 			direction.normalize(1);
 			
-			this.x += direction.x * m_Speed.x * GameTime.ElapsedGameTimeSeconds;
-			this.y += direction.y * m_Speed.y * GameTime.ElapsedGameTimeSeconds;
+			var nextPosition:Point = new Point(this.x, this.y);
+			nextPosition.x += direction.x * m_Speed.x * GameTime.ElapsedGameTimeSeconds;
+			nextPosition.y += direction.y * m_Speed.y * GameTime.ElapsedGameTimeSeconds;
 			
-			if ((direction.x > 0 && this.x >= m_CurrentNodePosition.x) || (direction.x < 0 && this.x <= m_CurrentNodePosition.x) || (direction.x == 0))
+			if (((direction.x > 0 && nextPosition.x >= m_CurrentNodePosition.x) || (direction.x < 0 && nextPosition.x <= m_CurrentNodePosition.x) || (direction.x == 0)) &&
+				((direction.y > 0 && nextPosition.y >= m_CurrentNodePosition.y) || (direction.y < 0 && nextPosition.y <= m_CurrentNodePosition.y) || (direction.y == 0)))
 			{
-				if ((direction.y > 0 && this.y >= m_CurrentNodePosition.y) || (direction.y < 0 && this.y <= m_CurrentNodePosition.y) || (direction.y == 0))
-				{
-					followPath();
-				}
+				this.x = m_CurrentNodePosition.x;
+				this.y = m_CurrentNodePosition.y;
+				
+				followPath();
+			}
+			else
+			{
+				m_Image.Rotation = UtilMethods.VectorToDegreeRotation(direction);
+				this.x += direction.x * m_Speed.x * GameTime.ElapsedGameTimeSeconds;
+				this.y += direction.y * m_Speed.y * GameTime.ElapsedGameTimeSeconds;
+			}
+			
+			m_CurrentTimeToPath += GameTime.ElapsedGameTimeSeconds;
+			
+			if (m_CurrentTimeToPath >= m_TimeToPath)
+			{
+				findPath(m_CurrentNodePosition);
 			}
 		}
 		
@@ -124,9 +154,33 @@ package Gameplay.Enemy
 			}
 		}
 		
+		public function CheckPlayerCollision(player:Player):void
+		{
+			if (player.CollisionBounds.intersects(this.CollisionBounds))
+			{
+				player.CollisionWithEnemy(this);
+				findPath(m_CurrentNodePosition);
+			}
+		}
+		
 		public function get Position():Point
 		{
 			return new Point(this.x, this.y);
+		}
+		
+		public function get CenterPosition():Point
+		{
+			return new Point(this.x + m_Image.FrameWidth * 0.5, this.y + m_Image.FrameHeight * 0.5);
+		}
+		
+		public function get CollisionBounds():Rectangle
+		{
+			return new Rectangle(this.x, this.y, m_Image.FrameWidth, m_Image.FrameHeight);
+		}
+		
+		public function get Size():Point
+		{
+			return new Point(m_Image.FrameWidth, m_Image.FrameHeight);
 		}
 	}
 }

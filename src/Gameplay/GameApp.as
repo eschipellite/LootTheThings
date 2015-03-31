@@ -56,6 +56,8 @@ package Gameplay
 		
 		public function Update():void
 		{
+			RoomManager.CurrentTileGrid.Reset();
+			
 			m_PlayerHandler.Update();
 			m_RoomManager.Update();
 			m_EnemyManager.Update();

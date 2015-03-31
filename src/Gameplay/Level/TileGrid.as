@@ -50,7 +50,7 @@ package Gameplay.Level
 			
 			RefreshAvailablePositions();
 			
-			refreshPathing();
+			RefreshPathing();
 		}
 		
 		private function populateTileGrid():void
@@ -173,7 +173,7 @@ package Gameplay.Level
 			return gtXZero && ltXLength && gtYZero && ltYLength;
 		}
 		
-		private function refreshPathing():void
+		public function RefreshPathing():void
 		{
 			initializeNodes();
 			

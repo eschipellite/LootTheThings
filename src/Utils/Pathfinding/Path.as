@@ -44,15 +44,20 @@ package Utils.Pathfinding
 				
 				while (inputIndex < this.NumNodes)
 				{
-					var topLeft:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x - 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y - 0.5, tileSize);
-					var topRight:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x + 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y - 0.5, tileSize);
-					var bottomLeft:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x - 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y + 0.5, tileSize);
-					var bottomRight:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x + 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y + 0.5, tileSize);
+					var lastTopLeft:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x - 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y - 0.5, tileSize);
+					var lastTopRight:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x + 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y - 0.5, tileSize);
+					var lastBottomLeft:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x - 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y + 0.5, tileSize);
+					var lastBottomRight:Node = new Node(smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.x + 0.5, smoothPath.GetNodes()[smoothPath.NumNodes - 1].NodeID.y + 0.5, tileSize);
 					
-					if (!RayClear(topLeft, m_Nodes[inputIndex], tileSize, collisionMap) ||
-						!RayClear(topRight, m_Nodes[inputIndex], tileSize, collisionMap) ||
-						!RayClear(bottomLeft, m_Nodes[inputIndex], tileSize, collisionMap) ||
-						!RayClear(bottomRight, m_Nodes[inputIndex], tileSize, collisionMap))
+					var topLeft:Node = new Node(m_Nodes[inputIndex].NodeID.x - 0.5, m_Nodes[inputIndex].NodeID.y - 0.5, tileSize);
+					var topRight:Node = new Node(m_Nodes[inputIndex].NodeID.x + 0.5, m_Nodes[inputIndex].NodeID.y - 0.5, tileSize);
+					var bottomLeft:Node = new Node(m_Nodes[inputIndex].NodeID.x - 0.5, m_Nodes[inputIndex].NodeID.y + 0.5, tileSize);
+					var bottomRight:Node = new Node(m_Nodes[inputIndex].NodeID.x + 0.5, m_Nodes[inputIndex].NodeID.y + 0.5, tileSize);
+					
+					if (!RayClear(lastTopLeft, topLeft, tileSize, collisionMap) ||
+						!RayClear(lastTopRight, topRight, tileSize, collisionMap) ||
+						!RayClear(lastBottomLeft, bottomLeft, tileSize, collisionMap) ||
+						!RayClear(lastBottomRight, bottomRight, tileSize, collisionMap))
 					{
 						smoothPath.AddNode(m_Nodes[inputIndex - 1]);
 					}

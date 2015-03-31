@@ -139,5 +139,10 @@ package Utils
 		{
 			return Class(getDefinitionByName(getQualifiedClassName(object)));
 		}
+		
+		public static function VectorToDegreeRotation(vector:Point):Number
+		{
+			return (int)(Math.atan2(vector.y, vector.x) / (Math.PI) * 180);
+		}
 	}
 }

@@ -9,5 +9,6 @@ package Gameplay.Level
 	{
 		public static const OPEN:int = 0;
 		public static const WALL:int = 1;
+		public static const PLAYER:int = 2;
 	}
 }
