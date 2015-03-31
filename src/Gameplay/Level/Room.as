@@ -45,6 +45,8 @@ package Gameplay.Level
 		
 		private var m_RoomState:int;
 		
+		private var m_NumEnemies:int = 50;
+		
 		public function Room() 
 		{	
 			m_NorthExit = ExitStates.CLOSED_AVAILABLE;
@@ -512,6 +514,11 @@ package Gameplay.Level
 			return new Point(m_RoomSize.x * State_Gameplay.TILE_SIZE, m_RoomSize.y * State_Gameplay.TILE_SIZE);
 		}
 		
+		public function get GridSize():Point
+		{
+			return new Point(m_RoomSize.x, m_RoomSize.y);
+		}
+		
 		public function set NorthRoom(room:Room):void
 		{
 			m_NorthRoom = room;
@@ -545,6 +552,11 @@ package Gameplay.Level
 		public function GetRoomInformation():RoomInfo
 		{
 			return new RoomInfo(m_GridPosition.x, m_GridPosition.y, m_RoomState);
+		}
+		
+		public function get NumEnemies():int
+		{
+			return m_NumEnemies;
 		}
 	}
 }

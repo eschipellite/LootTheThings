@@ -2,6 +2,7 @@ package Gameplay
 {
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	import flash.geom.Point;
 	import Gameplay.HUD.GameHUD;
 	import General.States.GameState;
 	import Menu.PlayerSelection.Events.PlayerInformationEvent;

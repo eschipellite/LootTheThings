@@ -15,6 +15,7 @@ package Menu.PlayerSelection
 		private var m_RoomNumSelector:TextField;
 		private var m_RoomNum:int;
 		private const m_MinRoomNum:int = 1;
+		private const m_StartRoomNum:int = 5;
 		private const m_MaxRoomNum:int = 50;
 		private var m_Position_RoomNumSelector:Point = new Point(0, 32);
 		
@@ -28,6 +29,7 @@ package Menu.PlayerSelection
 		{
 			m_RoomNumSelector = new TextField();
 			m_DivergenceSelector = new TextField();
+			m_RoomNum = m_StartRoomNum;
 		}
 		
 		public function Initialize():void

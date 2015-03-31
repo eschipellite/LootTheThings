@@ -5,7 +5,6 @@ package Utils
 	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import Gameplay.Player.EmbeddedImages_Player;
 	import Utils.GameTime;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;

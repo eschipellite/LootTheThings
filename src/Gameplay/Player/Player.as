@@ -6,6 +6,7 @@ package Gameplay.Player
 	import flash.geom.Rectangle;
 	import flash.ui.GameInput;
 	import flash.ui.GameInputControl;
+	import Gameplay.EmbeddedImages_Gameplay;
 	import Gameplay.HUD.Events.HUDEvent;
 	import Gameplay.Level.Events.PlayerCollisionEvent;
 	import Gameplay.Level.RoomManager;
@@ -54,7 +55,7 @@ package Gameplay.Player
 			
 			m_Bounds = new Rectangle(0, 0, Main.ScreenArea.x, Main.ScreenArea.y);
 			
-			m_Image_Player = ImageLoader.GetImage(EmbeddedImages_Player.Player_Player);
+			m_Image_Player = ImageLoader.GetImage(EmbeddedImages_Gameplay.Gameplay_Player);
 			m_Image_Player.Frame = m_Index;
 			
 			this.addChild(m_Image_Player);

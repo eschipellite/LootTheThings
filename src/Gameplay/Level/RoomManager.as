@@ -5,6 +5,7 @@ package Gameplay.Level
 	import flash.events.NativeWindowBoundsEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import Gameplay.Enemy.Events.SpawnEnemiesEvent;
 	import Gameplay.HUD.Events.RoomInfoEvent;
 	import Gameplay.Level.Events.PlayerCollisionEvent;
 	import Gameplay.Level.Events.RoomEvent;
@@ -24,7 +25,7 @@ package Gameplay.Level
 		public static const ROOM_OFFSET:Point = new Point(0, 8);
 		
 		private var m_RoomTypes:Vector.<String>;
-		private var m_Rooms:Vector.<Room>;
+		private static var m_Rooms:Vector.<Room>;
 		
 		private var m_StartRoomType:String;
 		private var m_StartRoomBounds:Rectangle;
@@ -33,12 +34,15 @@ package Gameplay.Level
 		private var m_CurrentDivergence:int;
 		private var m_TotalRooms:int = 50;
 		
-		private var m_CurrentRoom:Room;
+		private static var ms_CurrentRoom:Room;
+		
+		private static var ms_TileGrid:TileGrid;
 		
 		public function RoomManager() 
 		{
 			m_RoomTypes = new Vector.<String>();
 			m_Rooms = new Vector.<Room>();
+			ms_TileGrid = new TileGrid();
 		}	
 		
 		public function Initialize():void
@@ -87,6 +91,18 @@ package Gameplay.Level
 			setCurrentRoom(0);
 			
 			sendRoomInformation();
+			
+			startRoom();
+		}
+		
+		private function startRoom():void
+		{
+			var roomPosition:Point = ms_CurrentRoom.Position;
+			roomPosition.x += ROOM_OFFSET.x;
+			roomPosition.y += ROOM_OFFSET.y;
+			ms_TileGrid.SetTileGrid(ms_CurrentRoom.TileMap, ms_CurrentRoom.GridSize, roomPosition, State_Gameplay.TILE_SIZE); 
+			
+			State_Gameplay.eventDispatcher.dispatchEvent(new SpawnEnemiesEvent(SpawnEnemiesEvent.SPAWN_ENEMIES_EVENT));
 		}
 		
 		private function sendRoomInformation():void
@@ -108,25 +124,27 @@ package Gameplay.Level
 		
 		private function eh_ChangeRoomEvent(evt:RoomEvent):void
 		{
-			m_CurrentRoom.SetRoomState(RoomStates.VISITED);
-			State_Gameplay.eventDispatcher.dispatchEvent(new RoomInfoEvent(RoomInfoEvent.SEND_ROOM_INFO_EVENT, null, m_CurrentRoom.GetRoomInformation()));
+			ms_CurrentRoom.SetRoomState(RoomStates.VISITED);
+			State_Gameplay.eventDispatcher.dispatchEvent(new RoomInfoEvent(RoomInfoEvent.SEND_ROOM_INFO_EVENT, null, ms_CurrentRoom.GetRoomInformation()));
 			
-			var changeRoom:Room = m_CurrentRoom.GetConnection(evt.E_Exit);
-			m_CurrentRoom = changeRoom;
-			m_CurrentRoom.SetRoomState(RoomStates.CURRENT);
-			Camera.SetPosition(m_CurrentRoom.Position);
+			var changeRoom:Room = ms_CurrentRoom.GetConnection(evt.E_Exit);
+			ms_CurrentRoom = changeRoom;
+			ms_CurrentRoom.SetRoomState(RoomStates.CURRENT);
+			Camera.SetPosition(ms_CurrentRoom.Position);
 			
 			var spawn:int = Direction.GetOppositeExit(evt.E_Exit);
-			var spawnPoints:Vector.<Rectangle> = m_CurrentRoom.GetSpawnBlocks(spawn);
-			State_Gameplay.eventDispatcher.dispatchEvent(new SpawnPlayersEvent(SpawnPlayersEvent.SPAWN_PLAYERS_EVENT, spawnPoints, m_CurrentRoom.Position));
-			State_Gameplay.eventDispatcher.dispatchEvent(new RoomInfoEvent(RoomInfoEvent.SEND_ROOM_INFO_EVENT, null, m_CurrentRoom.GetRoomInformation()));
+			var spawnPoints:Vector.<Rectangle> = ms_CurrentRoom.GetSpawnBlocks(spawn);
+			State_Gameplay.eventDispatcher.dispatchEvent(new SpawnPlayersEvent(SpawnPlayersEvent.SPAWN_PLAYERS_EVENT, spawnPoints, ms_CurrentRoom.Position));
+			State_Gameplay.eventDispatcher.dispatchEvent(new RoomInfoEvent(RoomInfoEvent.SEND_ROOM_INFO_EVENT, null, ms_CurrentRoom.GetRoomInformation()));
+			
+			startRoom();
 		}
 		
 		private function eh_CheckPlayerXCollision(evt:PlayerCollisionEvent):void
 		{
 			var playerRectangle:Rectangle = evt.E_Player.CollisionBounds;
-			playerRectangle.x -= m_CurrentRoom.Position.x;
-			playerRectangle.y -= m_CurrentRoom.Position.y;
+			playerRectangle.x -= ms_CurrentRoom.Position.x;
+			playerRectangle.y -= ms_CurrentRoom.Position.y;
 			
 			playerRectangle.y += 1;
 			playerRectangle.height -= 2;
@@ -139,8 +157,8 @@ package Gameplay.Level
 		private function eh_CheckPlayerYCollision(evt:PlayerCollisionEvent):void
 		{
 			var playerRectangle:Rectangle = evt.E_Player.CollisionBounds;
-			playerRectangle.x -= m_CurrentRoom.Position.x;
-			playerRectangle.y -= m_CurrentRoom.Position.y;
+			playerRectangle.x -= ms_CurrentRoom.Position.x;
+			playerRectangle.y -= ms_CurrentRoom.Position.y;
 			
 			playerRectangle.x += 1;
 			playerRectangle.width -= 2;
@@ -189,7 +207,7 @@ package Gameplay.Level
 			var firstHit:Boolean = true;
 			var secondHit:Boolean = true;
 			
-			var tileMap:Array = m_CurrentRoom.TileMap;
+			var tileMap:Array = ms_CurrentRoom.TileMap;
 			
 			firstHit = tileMap[pointArray[0].y][pointArray[0].x] == TileValues.WALL || tileMap[pointArray[1].y][pointArray[1].x] == TileValues.WALL;
 			secondHit = tileMap[pointArray[2].y][pointArray[2].x] == TileValues.WALL || tileMap[pointArray[3].y][pointArray[3].x] == TileValues.WALL;
@@ -204,7 +222,7 @@ package Gameplay.Level
 		{
 			var playerRectangle:Rectangle = evt.E_Player.CollisionBounds;
 			
-			var exit:int = m_CurrentRoom.CheckAtExit(playerRectangle);
+			var exit:int = ms_CurrentRoom.CheckAtExit(playerRectangle);
 			
 			evt.E_Player.SetAtExit(exit);
 			
@@ -220,8 +238,8 @@ package Gameplay.Level
 			{
 				if (room.RoomIndex == roomIndex)
 				{
-					m_CurrentRoom = room;
-					m_CurrentRoom.SetRoomState(RoomStates.CURRENT);
+					ms_CurrentRoom = room;
+					ms_CurrentRoom.SetRoomState(RoomStates.CURRENT);
 				}
 			}
 		}
@@ -333,6 +351,16 @@ package Gameplay.Level
 			}
 			
 			return roomInformation;
+		}
+		
+		public static function get CurrentRoom():Room
+		{
+			return ms_CurrentRoom;
+		}
+		
+		public static function get CurrentTileGrid():TileGrid
+		{
+			return ms_TileGrid;
 		}
 	}
 }

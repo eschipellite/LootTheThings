@@ -1,7 +1,6 @@
 package General.Embedded_Content 
 {
 	import Gameplay.EmbeddedImages_Gameplay;
-	import Gameplay.Player.EmbeddedImages_Player;
 	import Menu.Main.EmbeddedImages_Main;
 	import Menu.Options.EmbeddedImages_Options;
 	import Menu.PlayerSelection.EmbeddedImages_PlayerSelection;

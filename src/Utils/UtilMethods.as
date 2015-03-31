@@ -95,7 +95,7 @@ package Utils
 		
 		public static function StringTo2DArray(string:String):Array
 		{
-			var rows:Array = string.split("\r\n\t\t");
+			var rows:Array = string.split("\n\t\t");
 			
 			var array:Array = new Array();
 			
