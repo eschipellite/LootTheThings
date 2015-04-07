@@ -1,4 +1,4 @@
-package Gameplay.Level 
+package Gameplay.Level.Tiles 
 {
 	import flash.geom.Point;
 	import Utils.Pathfinding.AStarPathfinder;
@@ -103,7 +103,7 @@ package Gameplay.Level
 					
 					for (var adjIndex:int = 0; adjIndex < adjacenies.length; adjIndex++)
 					{
-						if (m_TileGrid[int(adjacenies[adjIndex].y)][int(adjacenies[adjIndex].x)] == 0)
+						if (m_TileGrid[int(adjacenies[adjIndex].y)][int(adjacenies[adjIndex].x)] != TileValues.WALL)
 						{
 							var toNode:Node = m_Nodes[int(adjacenies[adjIndex].y)][int(adjacenies[adjIndex].x)];
 							

@@ -1,4 +1,4 @@
-package Gameplay.Level 
+package Gameplay.Level.Tiles 
 {
 	import flash.display.Sprite;
 	/**
@@ -9,6 +9,7 @@ package Gameplay.Level
 	{
 		public static const OPEN:int = 0;
 		public static const WALL:int = 1;
-		public static const PLAYER:int = 2;
+		public static const ENEMY_SPAWN:int = 2;
+		public static const PLAYER:int = 3;
 	}
 }

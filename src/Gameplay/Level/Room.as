@@ -5,6 +5,9 @@ package Gameplay.Level
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import Gameplay.EmbeddedImages_Gameplay;
+	import Gameplay.Level.Tiles.TileValues;
+	import Gameplay.Level.Waves.Wave;
+	import Gameplay.Level.Waves.WaveInfo;
 	import Gameplay.State_Gameplay;
 	import Utils.ImageContent.Image;
 	import Utils.ImageContent.ImageLoader;
@@ -45,7 +48,7 @@ package Gameplay.Level
 		
 		private var m_RoomState:int;
 		
-		private var m_NumEnemies:int = 50;
+		private var m_WaveInfo:WaveInfo;
 		
 		public function Room() 
 		{	
@@ -67,6 +70,8 @@ package Gameplay.Level
 			m_SouthSpawnBlocks = new Vector.<Rectangle>();
 			m_EastSpawnBlocks = new Vector.<Rectangle>();
 			m_WestSpawnBlocks = new Vector.<Rectangle>();
+			
+			m_WaveInfo = new WaveInfo();
 		}
 		
 		public function Initialize():void
@@ -78,13 +83,32 @@ package Gameplay.Level
 			
 			createExits();
 			createTiles();
+			createWaveSpawnPoints();
 			createSpawnPoints();
 			setBottomPerimeter();
 		}
 		
-		public function SetRoomType(roomType:String):void
+		public function SetRoomGrid(roomType:String):void
 		{
 			m_RoomType = roomType;
+		}
+		
+		public function SetWaveInfo(waveInfo:XMLList):void
+		{
+			createWaves(waveInfo);
+		}
+		
+		private function createWaves(waveInfo:XMLList):void
+		{
+			m_WaveInfo = new WaveInfo();
+			
+			for each(var wave:XML in waveInfo.wave)
+			{
+				var numEnemies:int = wave.count;
+				var duration:Number = wave.duration;
+				
+				m_WaveInfo.AddWave(new Wave(numEnemies, duration));
+			}
 		}
 		
 		public function SetRoomIndex(roomIndex:int):void
@@ -241,6 +265,20 @@ package Gameplay.Level
 			m_TileMap.y = RoomManager.ROOM_OFFSET.y;
 			
 			this.addChild(m_TileMap);
+		}
+		
+		private function createWaveSpawnPoints():void
+		{
+			for (var row:int = 0; row < m_RoomArray.length; row++)
+			{
+				for (var col:int = 0; col < m_RoomArray[row].length; col++)
+				{
+					if (m_RoomArray[row][col] == TileValues.ENEMY_SPAWN)
+					{
+						m_WaveInfo.AddGridSpawnLocation(new Point(col, row));
+					}
+				}
+			}
 		}
 		
 		private function loadTileMapImage(tileMapIndex:int):Image
@@ -554,9 +592,9 @@ package Gameplay.Level
 			return new RoomInfo(m_GridPosition.x, m_GridPosition.y, m_RoomState);
 		}
 		
-		public function get NumEnemies():int
+		public function get RoomWaveInfo():WaveInfo
 		{
-			return m_NumEnemies;
+			return m_WaveInfo;
 		}
 	}
 }

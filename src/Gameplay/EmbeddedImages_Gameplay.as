@@ -24,7 +24,7 @@ package Gameplay
 		public static function LoadImages():void
 		{
 			ImageLoader.InitializeImage(Gameplay_Background);
-			ImageLoader.InitializeImage(Gameplay_Tiles, 2);
+			ImageLoader.InitializeImage(Gameplay_Tiles, 3);
 			ImageLoader.InitializeImage(Gameplay_Player, 4);
 			ImageLoader.InitializeImage(Gameplay_Enemy);
 			

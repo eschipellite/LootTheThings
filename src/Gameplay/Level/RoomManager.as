@@ -9,6 +9,8 @@ package Gameplay.Level
 	import Gameplay.HUD.Events.RoomInfoEvent;
 	import Gameplay.Level.Events.PlayerCollisionEvent;
 	import Gameplay.Level.Events.RoomEvent;
+	import Gameplay.Level.Tiles.TileGrid;
+	import Gameplay.Level.Tiles.TileValues;
 	import Gameplay.Player.Events.SpawnPlayersEvent;
 	import Gameplay.State_Gameplay;
 	import General.Camera;
@@ -24,11 +26,12 @@ package Gameplay.Level
 	{	
 		public static const ROOM_OFFSET:Point = new Point(0, 8);
 		
-		private var m_RoomTypes:Vector.<String>;
+		private var m_RoomTypes:Vector.<RoomType>;
 		private static var m_Rooms:Vector.<Room>;
 		
 		private var m_StartRoomType:String;
 		private var m_StartRoomBounds:Rectangle;
+		private var m_StartRoomWaveInfo:XMLList;
 		
 		private var m_Divergence:int = 15;
 		private var m_CurrentDivergence:int;
@@ -40,7 +43,7 @@ package Gameplay.Level
 		
 		public function RoomManager() 
 		{
-			m_RoomTypes = new Vector.<String>();
+			m_RoomTypes = new Vector.<RoomType>();
 			m_Rooms = new Vector.<Room>();
 			ms_TileGrid = new TileGrid();
 		}	
@@ -56,13 +59,15 @@ package Gameplay.Level
 			
 			m_StartRoomType = xml.startroom.grid;
 			m_StartRoomBounds = UtilMethods.StringToRectangle(xml.startroom.bounds);
+			m_StartRoomWaveInfo = xml.startroom.waves;
 			
 			var rooms:XMLList = xml.room;
 			
 			for (var index:int = 0; index < rooms.length(); index++)
 			{
 				var roomType:String = rooms[index].grid;
-				m_RoomTypes.push(roomType);
+				var waveInfo:XMLList = rooms[index].waves;
+				m_RoomTypes.push(new RoomType(roomType, waveInfo));
 			}
 		}
 		
@@ -102,7 +107,7 @@ package Gameplay.Level
 			roomPosition.y += ROOM_OFFSET.y;
 			ms_TileGrid.SetTileGrid(ms_CurrentRoom.TileMap, ms_CurrentRoom.GridSize, roomPosition, State_Gameplay.TILE_SIZE); 
 			
-			State_Gameplay.eventDispatcher.dispatchEvent(new SpawnEnemiesEvent(SpawnEnemiesEvent.SPAWN_ENEMIES_EVENT));
+			State_Gameplay.eventDispatcher.dispatchEvent(new SpawnEnemiesEvent(SpawnEnemiesEvent.SPAWN_ENEMIES_EVENT, ms_CurrentRoom.RoomWaveInfo));
 		}
 		
 		private function sendRoomInformation():void
@@ -264,8 +269,9 @@ package Gameplay.Level
 			m_CurrentDivergence = m_Divergence;
 			
 			var firstRoom:Room = new Room();
-			firstRoom.SetRoomType(m_StartRoomType);
+			firstRoom.SetRoomGrid(m_StartRoomType);
 			firstRoom.SetRoomIndex(currentRoomIndex);
+			firstRoom.SetWaveInfo(m_StartRoomWaveInfo);
 			m_Rooms.push(firstRoom);
 			
 			currentRoomIndex++;
@@ -317,8 +323,9 @@ package Gameplay.Level
 			{
 				if (!room.HasRoomType)
 				{
-					var randomRoomType:String = getRandomRoomType();
-					room.SetRoomType(randomRoomType);
+					var randomRoomType:RoomType = getRandomRoomType();
+					room.SetRoomGrid(randomRoomType.RoomGrid);
+					room.SetWaveInfo(randomRoomType.WaveInfo);
 				}
 				
 				room.Initialize();
@@ -330,7 +337,7 @@ package Gameplay.Level
 			}
 		}
 		
-		private function getRandomRoomType():String
+		private function getRandomRoomType():RoomType
 		{
 			var randomIndex:int = UtilMethods.Random(0, m_RoomTypes.length - 1, UtilMethods.ROUND);
 			return m_RoomTypes[randomIndex];
