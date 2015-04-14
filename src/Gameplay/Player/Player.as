@@ -2,6 +2,7 @@ package Gameplay.Player
 {
 	import flash.desktop.InteractiveIcon;
 	import flash.display.Sprite;
+	import flash.display3D.textures.RectangleTexture;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.GameInput;
@@ -19,25 +20,26 @@ package Gameplay.Player
 	import Utils.InputContent.Controllers.ControllerInput;
 	import Utils.InputContent.Controllers.GameController;
 	import Utils.Output.Console;
+	import Utils.UtilMethods;
 	/**
 	 * ...
 	 * @author ...
 	 */
 	public class Player extends Sprite
 	{
-		private var m_Image_Player:Image;
+		protected var m_Image_Player:Image;
 		
-		private var m_Index:int;
+		protected var m_Index:int;
 		
-		private var m_Speed:int = 384;
+		protected var m_Speed:int = 384;
 		
-		private var m_ToAdjust:Point;
-		private var m_PreviousPosition:Point;
+		protected var m_ToAdjust:Point;
+		protected var m_PreviousPosition:Point;
 		
-		private var m_Bounds:Rectangle;
+		protected var m_Bounds:Rectangle;
 		
-		private var m_Exit:int;
-		private var m_Spawned:Boolean;
+		protected var m_Exit:int;
+		protected var m_Spawned:Boolean;
 		
 		public function Player() 
 		{
@@ -56,15 +58,21 @@ package Gameplay.Player
 			
 			m_Bounds = new Rectangle(0, 0, Main.ScreenArea.x, Main.ScreenArea.y);
 			
-			m_Image_Player = ImageLoader.GetImage(EmbeddedImages_Gameplay.Gameplay_Player);
-			m_Image_Player.Frame = m_Index;
+			loadImages();
 			
 			this.addChild(m_Image_Player);
 		}
 		
+		protected function loadImages():void
+		{
+			m_Image_Player = ImageLoader.GetImage(EmbeddedImages_Gameplay.Gameplay_Player);
+			m_Image_Player.Frame = m_Index;
+		}
+		
 		public function Update():void
 		{
-			checkInput();
+			checkMovementInput();
+			checkRotationInput();
 			move();
 			checkAtExit();
 			checkButtons();
@@ -92,7 +100,7 @@ package Gameplay.Player
 			}
 		}
 		
-		private function checkInput():void
+		private function checkMovementInput():void
 		{
 			var movement:Point = ControllerInput.GetController(m_Index).LeftStick;
 			
@@ -100,9 +108,19 @@ package Gameplay.Player
 			m_ToAdjust.y = movement.y * GameTime.ElapsedGameTimeSeconds * m_Speed;
 		}
 		
+		protected function checkRotationInput():void
+		{
+			var direction:Point = ControllerInput.GetController(m_Index).RightStick;
+			direction.normalize(1);
+			if (direction.length != 0)
+			{
+				m_Image_Player.Rotation = UtilMethods.VectorToDegreeRotation(direction);
+			}
+		}
+		
 		private function move():void
 		{
-			m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
+			m_PreviousPosition = new Point(this.x, this.y);
 			moveX();
 			moveY();
 			checkCollisionWithEnemies();
@@ -142,24 +160,24 @@ package Gameplay.Player
 		
 		private function moveX():void
 		{
-			m_Image_Player.x += m_ToAdjust.x;
+			this.x += m_ToAdjust.x;
 			checkBounds();
 			checkXCollision();
-			m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
+			m_PreviousPosition = new Point(this.x, this.y);
 		}
 		
 		private function moveY():void
 		{
-			m_Image_Player.y += m_ToAdjust.y;
+			this.y += m_ToAdjust.y;
 			checkBounds();
 			checkYCollision();
-			m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
+			m_PreviousPosition = new Point(this.x, this.y);
 		}
 		
 		public function SetPosition(position:Point):void
 		{
-			m_Image_Player.x = position.x;
-			m_Image_Player.y = position.y;
+			this.x = position.x;
+			this.y = position.y;
 			
 			m_PreviousPosition.x = position.x;
 			m_PreviousPosition.y = position.y;
@@ -167,26 +185,26 @@ package Gameplay.Player
 		
 		private function checkBounds():void
 		{
-			if (m_Image_Player.x < m_Bounds.x)
+			if (this.x < m_Bounds.x)
 			{
-				m_Image_Player.x = m_Bounds.x;
-				m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
+				this.x = m_Bounds.x;
+				m_PreviousPosition = new Point(this.x, this.y);
 			}
-			else if (m_Image_Player.x > m_Bounds.x + m_Bounds.width - m_Image_Player.FrameWidth)
+			else if (this.x > m_Bounds.x + m_Bounds.width - m_Image_Player.FrameWidth)
 			{
-				m_Image_Player.x = m_Bounds.x + m_Bounds.width - m_Image_Player.FrameWidth;
-				m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
+				this.x = m_Bounds.x + m_Bounds.width - m_Image_Player.FrameWidth;
+				m_PreviousPosition = new Point(this.x, this.y);
 			}
 			
-			if (m_Image_Player.y < m_Bounds.y)
+			if (this.y < m_Bounds.y)
 			{
-				m_Image_Player.y = m_Bounds.y;
-				m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
+				this.y = m_Bounds.y;
+				m_PreviousPosition = new Point(this.x, this.y);
 			}
-			else if (m_Image_Player.y > m_Bounds.y + m_Bounds.height - m_Image_Player.FrameHeight)
+			else if (this.y > m_Bounds.y + m_Bounds.height - m_Image_Player.FrameHeight)
 			{
-				m_Image_Player.y = m_Bounds.y + m_Bounds.height - m_Image_Player.FrameHeight;
-				m_PreviousPosition = new Point(m_Image_Player.x, m_Image_Player.y);
+				this.y = m_Bounds.y + m_Bounds.height - m_Image_Player.FrameHeight;
+				m_PreviousPosition = new Point(this.x, this.y);
 			}
 		}
 		
@@ -199,28 +217,28 @@ package Gameplay.Player
 		{
 			if (firstHit)
 			{
-				m_Image_Player.x = Math.round(m_PreviousPosition.x * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.x;
+				this.x = Math.round(m_PreviousPosition.x * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.x;
 			}
 			else if(secondHit)
 			{
-				m_Image_Player.x = Math.round(m_PreviousPosition.x * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.x + (State_Gameplay.TILE_SIZE - m_Image_Player.FrameWidth);
+				this.x = Math.round(m_PreviousPosition.x * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.x + (State_Gameplay.TILE_SIZE - m_Image_Player.FrameWidth);
 			}
 				
-			m_PreviousPosition.x = m_Image_Player.x;
+			m_PreviousPosition.x = this.x;
 		}
 		
 		public function SetCollisionY(firstHit:Boolean, secondHit:Boolean):void
 		{
 			if (firstHit)
 			{
-				m_Image_Player.y = Math.round(m_PreviousPosition.y * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.y;
+				this.y = Math.round(m_PreviousPosition.y * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.y;
 			}
 			else if (secondHit)
 			{
-				m_Image_Player.y = Math.round(m_PreviousPosition.y * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.y + (State_Gameplay.TILE_SIZE - m_Image_Player.FrameHeight);;
+				this.y = Math.round(m_PreviousPosition.y * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.y + (State_Gameplay.TILE_SIZE - m_Image_Player.FrameHeight);;
 			}
 			
-			m_PreviousPosition.y = m_Image_Player.y;
+			m_PreviousPosition.y = this.y;
 		}
 		
 		private function checkYCollision():void
@@ -242,8 +260,8 @@ package Gameplay.Player
 			contactNormal.normalize(1);
 			
 			var movement:Point = new Point(contactNormal.x * penetration.x, contactNormal.y * penetration.y);
-			m_Image_Player.x += (movement.x);
-			m_Image_Player.y += (movement.y);
+			this.x += (movement.x);
+			this.y += (movement.y);
 			
 			checkXCollision();
 			checkYCollision();
@@ -256,7 +274,7 @@ package Gameplay.Player
 		
 		public function get CollisionBounds():Rectangle
 		{
-			return m_Image_Player.CollisionBounds;
+			return new Rectangle(this.x, this.y, m_Image_Player.FrameWidth, m_Image_Player.FrameHeight);
 		}
 		
 		public function get Index():int
@@ -266,12 +284,12 @@ package Gameplay.Player
 		
 		public function get Position():Point
 		{
-			return new Point(m_Image_Player.x, m_Image_Player.y);
+			return new Point(this.x, this.y);
 		}
 		
 		public function get CenterPosition():Point
 		{
-			return new Point(m_Image_Player.x + m_Image_Player.FrameWidth * 0.5, m_Image_Player.y + m_Image_Player.FrameHeight * 0.5);
+			return new Point(this.x + m_Image_Player.FrameWidth * 0.5, this.y + m_Image_Player.FrameHeight * 0.5);
 		}
 	}
 }

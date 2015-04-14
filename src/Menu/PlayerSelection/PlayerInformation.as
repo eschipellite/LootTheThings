@@ -1,5 +1,7 @@
 package Menu.PlayerSelection 
 {
+	import Classes.ClassTypes;
+	import Classes.Onslaught.EmbeddedImages_Onslaught;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import Gameplay.State_Gameplay;
@@ -18,26 +20,43 @@ package Menu.PlayerSelection
 	 */
 	public class PlayerInformation extends Sprite
 	{
-		private var m_Image:Image;
+		private var m_DisconnectedImage:Image;
+		private var m_PlayerReadyImage:Image;
+		private var m_ClassSelections:Vector.<ClassSelection>;
 		
 		private var m_Index:int;
-		
 		private var m_ConnectionState:int;
+		private var m_ClassSelectionIndex:int;
 		
-		public function PlayerInformation(index:int) 
+		public function PlayerInformation() 
 		{
-			m_Index = index;
+			m_Index = 0;
 			m_ConnectionState = ConnectionState.NOT_CONNECTED;
+			m_ClassSelectionIndex = 0;
 			
-			m_Image = ImageLoader.GetImage(EmbeddedImages_PlayerSelection.PlayerSelection_ControllerStatus);
-			
-			this.addChild(m_Image);
+			m_ClassSelections = new Vector.<ClassSelection>();
 		}
 		
-		public function SetPosition(position:Point):void
+		public function Initialize(index:int):void
 		{
-			m_Image.x = position.x;
-			m_Image.y = position.y;
+			m_Index = index;
+			
+			m_DisconnectedImage = ImageLoader.GetImage(EmbeddedImages_PlayerSelection.PlayerSelection_ControllerDisconnected);
+			m_PlayerReadyImage = ImageLoader.GetImage(EmbeddedImages_PlayerSelection.PlayerSelection_PlayerReady);
+			
+			addClassSelections();
+			
+			this.addChild(m_DisconnectedImage);
+		}
+		
+		private function addClassSelections():void
+		{
+			for (var index:int = 0; index < ClassTypes.TOTAL_CLASS_TYPES; index++)
+			{
+				var classSelection:ClassSelection = new ClassSelection();
+				classSelection.Initialize(index);
+				m_ClassSelections.push(classSelection);
+			}
 		}
 		
 		public function Update():void
@@ -46,18 +65,79 @@ package Menu.PlayerSelection
 			checkJoin();
 			checkReturn();
 			checkLevelSelection();
+			checkClassSelection();
 			
 			refreshImage();
 		}
 		
 		private function refreshImage():void
 		{
-			m_Image.Frame = m_ConnectionState;
+			switch(m_ConnectionState)
+			{
+				case ConnectionState.NOT_CONNECTED:
+					refreshDisconnected();
+					break;
+				case ConnectionState.CONNECTED:
+					refreshConnected();
+					break;
+				case ConnectionState.READY:
+					refreshReady();
+					break;
+			}
+		}
+		
+		private function removeDisconnected():void
+		{
+			if (this.contains(m_DisconnectedImage))
+			{
+				this.removeChild(m_DisconnectedImage);
+			}
+		}
+		
+		private function removeCurrentClassSelection():void
+		{
+			if (this.contains(m_ClassSelections[m_ClassSelectionIndex]))
+			{
+				this.removeChild(m_ClassSelections[m_ClassSelectionIndex]);
+			}
+		}
+		
+		private function removeReady():void
+		{
+			if (this.contains(m_PlayerReadyImage))
+			{
+				this.removeChild(m_PlayerReadyImage);
+			}
+		}
+		
+		private function refreshDisconnected():void
+		{
+			removeCurrentClassSelection();
+			removeReady();
+			
+			this.addChild(m_DisconnectedImage);
+		}
+		
+		private function refreshConnected():void
+		{
+			removeDisconnected();
+			removeReady();
+			
+			this.addChild(m_ClassSelections[m_ClassSelectionIndex]);
+		}
+		
+		private function refreshReady():void
+		{
+			removeDisconnected();
+			
+			this.addChild(m_PlayerReadyImage);
 		}
 		
 		public function Reset():void
 		{
 			m_ConnectionState = ConnectionState.NOT_CONNECTED;
+			
+			refreshImage();
 		}
 		
 		private function checkConnected():void
@@ -143,6 +223,44 @@ package Menu.PlayerSelection
 			}
 		}
 		
+		private function checkClassSelection():void
+		{
+			if (m_ConnectionState == ConnectionState.CONNECTED)
+			{
+				var direction:int = 0;
+				
+				if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.LEFT_STICK_UP)) 
+				{
+					direction++;
+				}
+				
+				if (ControllerInput.GetController(m_Index).ButtonPressed(GameController.LEFT_STICK_DOWN)) 
+				{
+					direction--;
+				}
+				
+				adjustClassSelection(direction);
+			}
+		}
+		
+		private function adjustClassSelection(adjustment:int):void
+		{
+			removeCurrentClassSelection();
+			
+			m_ClassSelectionIndex += adjustment;
+			
+			if (m_ClassSelectionIndex < 0)
+			{
+				m_ClassSelectionIndex = m_ClassSelections.length - 1;
+			}
+			else if (m_ClassSelectionIndex > m_ClassSelections.length -1)
+			{
+				m_ClassSelectionIndex = 0;
+			}
+			
+			this.addChild(m_ClassSelections[m_ClassSelectionIndex]);
+		}
+		
 		public function get InGame():Boolean
 		{
 			return m_ConnectionState == ConnectionState.READY;
@@ -151,6 +269,11 @@ package Menu.PlayerSelection
 		public function get Index():int
 		{
 			return m_Index;
+		}
+		
+		public function get ClassType():int
+		{
+			return m_ClassSelections[m_ClassSelectionIndex].ClassType;
 		}
 	}
 }

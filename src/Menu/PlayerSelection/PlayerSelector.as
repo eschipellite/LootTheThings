@@ -29,7 +29,9 @@ package Menu.PlayerSelection
 		{
 			for (var index:int = 0; index < Main.MaxPlayers; index++)
 			{
-				m_PlayerInformation.push(new PlayerInformation(index));
+				var playerInformation:PlayerInformation = new PlayerInformation();
+				playerInformation.Initialize(index);
+				m_PlayerInformation.push(playerInformation);
 			}
 			
 			createPlayerInformation();
@@ -53,7 +55,8 @@ package Menu.PlayerSelection
 			var offset:Point = new Point(m_PlayerInformationOffset.x, m_PlayerInformationOffset.y);
 			for each(var playerInformation:PlayerInformation in m_PlayerInformation)
 			{
-				playerInformation.SetPosition(position);
+				playerInformation.x = position.x;
+				playerInformation.y = position.y;
 				this.addChild(playerInformation);
 				
 				position = new Point(m_PlayerInformationStart.x + offset.x, m_PlayerInformationStart.y + offset.y);

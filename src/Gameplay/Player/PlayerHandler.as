@@ -1,5 +1,6 @@
 package Gameplay.Player 
 {
+	import Classes.ClassTypes;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -127,7 +128,7 @@ package Gameplay.Player
 			{
 				if (playerInfo.InGame)
 				{
-					var player:Player = new Player();
+					var player:Player = ClassTypes.GetClassInstance(playerInfo.ClassType);
 					player.Initialize(playerInfo.Index);
 					m_Players.push(player);
 				}

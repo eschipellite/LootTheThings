@@ -144,5 +144,10 @@ package Utils
 		{
 			return (int)(Math.atan2(vector.y, vector.x) / (Math.PI) * 180);
 		}
+		
+		public static function DegreeToRadian(degreeRotation:Number):Number
+		{
+			return degreeRotation / 180 * Math.PI;
+		}
 	}
 }
