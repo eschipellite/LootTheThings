@@ -27,7 +27,7 @@ package Gameplay.Player
 	 */
 	public class Player extends Sprite
 	{
-		protected var m_Image_Player:Image;
+		protected var m_PlayerBase:PlayerBase;
 		
 		protected var m_Index:int;
 		
@@ -41,8 +41,14 @@ package Gameplay.Player
 		protected var m_Exit:int;
 		protected var m_Spawned:Boolean;
 		
+		protected var m_PlayerSize:Point = new Point(48, 48);
+		
+		protected var m_ActionState:int;
+		
 		public function Player() 
 		{
+			m_PlayerBase = new PlayerBase();
+			
 			m_Index = -1;
 			
 			m_ToAdjust = new Point(0, 0);
@@ -50,6 +56,7 @@ package Gameplay.Player
 			
 			m_Exit = -1;
 			m_Spawned = false;
+			m_ActionState = ActionState.IDLE;
 		}
 		
 		public function Initialize(index:int):void
@@ -60,13 +67,12 @@ package Gameplay.Player
 			
 			loadImages();
 			
-			this.addChild(m_Image_Player);
+			this.addChild(m_PlayerBase);
 		}
 		
 		protected function loadImages():void
 		{
-			m_Image_Player = ImageLoader.GetImage(EmbeddedImages_Gameplay.Gameplay_Player);
-			m_Image_Player.Frame = m_Index;
+			m_PlayerBase.Initialize(EmbeddedImages_Gameplay.Gameplay_Player, m_PlayerSize);
 		}
 		
 		public function Update():void
@@ -76,12 +82,31 @@ package Gameplay.Player
 			move();
 			checkAtExit();
 			checkButtons();
+			updateActionStates();
 		}
 		
 		private function checkButtons():void
 		{
 			checkHUDToggle();
 			checkReturnToggle();
+			checkRightTrigger();
+		}
+		
+		private function updateActionStates():void
+		{
+			switch(m_ActionState)
+			{
+				case ActionState.IDLE:
+					break;
+				case ActionState.ABILITY_ONE:
+					updateAbilityOne();
+					break;
+			}
+		}
+		
+		protected function updateAbilityOne():void
+		{
+			
 		}
 		
 		private function checkHUDToggle():void
@@ -100,6 +125,11 @@ package Gameplay.Player
 			}
 		}
 		
+		protected function checkRightTrigger():void
+		{
+			
+		}
+		
 		private function checkMovementInput():void
 		{
 			var movement:Point = ControllerInput.GetController(m_Index).LeftStick;
@@ -114,7 +144,7 @@ package Gameplay.Player
 			direction.normalize(1);
 			if (direction.length != 0)
 			{
-				m_Image_Player.Rotation = UtilMethods.VectorToDegreeRotation(direction);
+				m_PlayerBase.Rotation = UtilMethods.VectorToDegreeRotation(direction);
 			}
 		}
 		
@@ -190,9 +220,9 @@ package Gameplay.Player
 				this.x = m_Bounds.x;
 				m_PreviousPosition = new Point(this.x, this.y);
 			}
-			else if (this.x > m_Bounds.x + m_Bounds.width - m_Image_Player.FrameWidth)
+			else if (this.x > m_Bounds.x + m_Bounds.width - m_PlayerBase.FrameWidth)
 			{
-				this.x = m_Bounds.x + m_Bounds.width - m_Image_Player.FrameWidth;
+				this.x = m_Bounds.x + m_Bounds.width - m_PlayerBase.FrameWidth;
 				m_PreviousPosition = new Point(this.x, this.y);
 			}
 			
@@ -201,9 +231,9 @@ package Gameplay.Player
 				this.y = m_Bounds.y;
 				m_PreviousPosition = new Point(this.x, this.y);
 			}
-			else if (this.y > m_Bounds.y + m_Bounds.height - m_Image_Player.FrameHeight)
+			else if (this.y > m_Bounds.y + m_Bounds.height - m_PlayerBase.FrameHeight)
 			{
-				this.y = m_Bounds.y + m_Bounds.height - m_Image_Player.FrameHeight;
+				this.y = m_Bounds.y + m_Bounds.height - m_PlayerBase.FrameHeight;
 				m_PreviousPosition = new Point(this.x, this.y);
 			}
 		}
@@ -221,7 +251,7 @@ package Gameplay.Player
 			}
 			else if(secondHit)
 			{
-				this.x = Math.round(m_PreviousPosition.x * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.x + (State_Gameplay.TILE_SIZE - m_Image_Player.FrameWidth);
+				this.x = Math.round(m_PreviousPosition.x * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.x + (State_Gameplay.TILE_SIZE - m_PlayerBase.FrameWidth);
 			}
 				
 			m_PreviousPosition.x = this.x;
@@ -235,7 +265,7 @@ package Gameplay.Player
 			}
 			else if (secondHit)
 			{
-				this.y = Math.round(m_PreviousPosition.y * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.y + (State_Gameplay.TILE_SIZE - m_Image_Player.FrameHeight);;
+				this.y = Math.round(m_PreviousPosition.y * State_Gameplay.INVERT_TILE_SIZE) * State_Gameplay.TILE_SIZE + RoomManager.ROOM_OFFSET.y + (State_Gameplay.TILE_SIZE - m_PlayerBase.FrameHeight);;
 			}
 			
 			m_PreviousPosition.y = this.y;
@@ -269,12 +299,12 @@ package Gameplay.Player
 		
 		public function get Size():Point
 		{
-			return new Point(m_Image_Player.FrameWidth, m_Image_Player.FrameHeight);
+			return new Point(m_PlayerBase.FrameWidth, m_PlayerBase.FrameHeight);
 		}
 		
 		public function get CollisionBounds():Rectangle
 		{
-			return new Rectangle(this.x, this.y, m_Image_Player.FrameWidth, m_Image_Player.FrameHeight);
+			return new Rectangle(this.x, this.y, m_PlayerBase.FrameWidth, m_PlayerBase.FrameHeight);
 		}
 		
 		public function get Index():int
@@ -289,7 +319,7 @@ package Gameplay.Player
 		
 		public function get CenterPosition():Point
 		{
-			return new Point(this.x + m_Image_Player.FrameWidth * 0.5, this.y + m_Image_Player.FrameHeight * 0.5);
+			return new Point(this.x + m_PlayerBase.FrameWidth * 0.5, this.y + m_PlayerBase.FrameHeight * 0.5);
 		}
 	}
 }

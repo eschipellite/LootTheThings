@@ -1,5 +1,7 @@
 package Utils 
 {
+	import flash.display.DisplayObject;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
@@ -148,6 +150,26 @@ package Utils
 		public static function DegreeToRadian(degreeRotation:Number):Number
 		{
 			return degreeRotation / 180 * Math.PI;
+		}
+		
+		//Rotation around origin Solution from:
+		//http://stackoverflow.com/questions/21230483/rotate-image-around-center-point-of-its-container
+		public static function Rotation(displayObject:DisplayObject, degrees:Number, origin:Point):void
+		{
+			// Calculate rotation and shifts
+			var center:Point = origin;
+			var angle:Number = degrees - displayObject.rotation;
+			var radians:Number = angle * (Math.PI / 180.0);
+			var shiftByX:Number = center.x;
+			var shiftByY:Number = center.y;
+			// Perform rotation
+			var matrix:Matrix = new Matrix();           
+			matrix.translate(-shiftByX, -shiftByY);
+			matrix.rotate(radians);
+			matrix.translate(+shiftByX, +shiftByY);
+			matrix.concat(displayObject.transform.matrix);
+			displayObject.transform.matrix = matrix;
+			displayObject.rotation = Math.round(displayObject.rotation);
 		}
 	}
 }

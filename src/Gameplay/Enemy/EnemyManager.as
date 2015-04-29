@@ -1,7 +1,9 @@
 package Gameplay.Enemy 
 {
+	import Classes.Events.ClassAttackEvent;
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import Gameplay.Enemy.Events.SpawnEnemiesEvent;
 	import Gameplay.Level.Events.PlayerCollisionEvent;
 	import Gameplay.Level.Room;
@@ -37,6 +39,7 @@ package Gameplay.Enemy
 		{
 			State_Gameplay.eventDispatcher.addEventListener(SpawnEnemiesEvent.SPAWN_ENEMIES_EVENT, eh_SpawnEnemiesEvent);
 			State_Gameplay.eventDispatcher.addEventListener(PlayerCollisionEvent.CHECK_PLAYER_COLLISION_WITH_ENEMIES_EVENT, eh_CheckPlayerCollision);
+			State_Gameplay.eventDispatcher.addEventListener(ClassAttackEvent.CLASS_ATTACK_EVENT, eh_CheckClassAttack);
 		}
 		
 		private function eh_CheckPlayerCollision(evt:PlayerCollisionEvent):void
@@ -45,6 +48,11 @@ package Gameplay.Enemy
 			{
 				enemy.CheckPlayerCollision(evt.E_Player);
 			}
+		}
+		
+		private function eh_CheckClassAttack(evt:ClassAttackEvent):void
+		{
+			checkAttack(evt.E_Attack);
 		}
 		
 		public function Update():void
@@ -127,6 +135,22 @@ package Gameplay.Enemy
 			for each(var enemy:Enemy in m_Enemies)
 			{
 				enemy.Update();
+			}
+		}
+		
+		private function checkAttack(attack:Rectangle):void
+		{
+			for (var index:int = 0; index < m_Enemies.length; index++)
+			{
+				if (attack.intersects(m_Enemies[index].CollisionBounds))
+				{
+					if (this.contains(m_Enemies[index]))
+					{
+						this.removeChild(m_Enemies[index]);
+					}
+					m_Enemies.splice(index, 1);
+					index--;
+				}
 			}
 		}
 	}

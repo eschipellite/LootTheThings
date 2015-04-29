@@ -3,15 +3,15 @@
 		<bounds>448 256 384 192</bounds>
 		<waves>
 			<wave>
-				<count>2</count>
-				<duration>5</duration>
-			</wave>
-			<wave>
-				<count>3</count>
+				<count>5</count>
 				<duration>5</duration>
 			</wave>
 			<wave>
 				<count>4</count>
+				<duration>5</duration>
+			</wave>
+			<wave>
+				<count>6</count>
 				<duration>5</duration>
 			</wave>
 		</waves>
@@ -32,19 +32,19 @@
 	<room>
 		<waves>
 			<wave>
-				<count>2</count>
+				<count>4</count>
 				<duration>5</duration>
 			</wave>
 			<wave>
-				<count>2</count>
+				<count>4</count>
 				<duration>2</duration>
 			</wave>
 			<wave>
-				<count>2</count>
+				<count>4</count>
 				<duration>2</duration>
 			</wave>
 			<wave>
-				<count>2</count>
+				<count>4</count>
 				<duration>2</duration>
 			</wave>
 		</waves>
@@ -65,7 +65,7 @@
 	<room>
 		<waves>
 			<wave>
-				<count>2</count>
+				<count>6</count>
 				<duration>5</duration>
 			</wave>
 			<wave>
@@ -73,7 +73,7 @@
 				<duration>20</duration>
 			</wave>
 			<wave>
-				<count>2</count>
+				<count>4</count>
 				<duration>2</duration>
 			</wave>
 		</waves>
@@ -94,15 +94,15 @@
 	<room>
 		<waves>
 			<wave>
-				<count>4</count>
+				<count>8</count>
 				<duration>10</duration>
 			</wave>
 			<wave>
-				<count>2</count>
+				<count>4</count>
 				<duration>2</duration>
 			</wave>
 			<wave>
-				<count>2</count>
+				<count>4</count>
 				<duration>2</duration>
 			</wave>
 		</waves>
@@ -123,12 +123,12 @@
 	<room>
 		<waves>
 			<wave>
-				<count>3</count>
-				<duration>5</duration>
+				<count>6</count>
+				<duration>3</duration>
 			</wave>
 			<wave>
-				<count>3</count>
-				<duration>5</duration>
+				<count>6</count>
+				<duration>3</duration>
 			</wave>
 		</waves>
 		<grid>

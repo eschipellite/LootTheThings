@@ -5,6 +5,7 @@ package Utils.ImageContent
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import Utils.UtilMethods;
 	
 	public class Image extends Bitmap
 	{
@@ -86,24 +87,9 @@ package Utils.ImageContent
 			m_TotalFrames = frames;
 		}
 		
-		//Rotation around origin Solution from:
-		//http://stackoverflow.com/questions/21230483/rotate-image-around-center-point-of-its-container
 		public function set Rotation(degrees:Number):void
 		{
-			// Calculate rotation and shifts
-			var center:Point = this.Origin;
-			var angle:Number = degrees - this.rotation;
-			var radians:Number = angle * (Math.PI / 180.0);
-			var shiftByX:Number = center.x;
-			var shiftByY:Number = center.y;
-			// Perform rotation
-			var matrix:Matrix = new Matrix();           
-			matrix.translate(-shiftByX, -shiftByY);
-			matrix.rotate(radians);
-			matrix.translate(+shiftByX, +shiftByY);
-			matrix.concat(this.transform.matrix);
-			this.transform.matrix = matrix;
-			this.rotation = Math.round(this.rotation);
+			UtilMethods.Rotation(this, degrees, this.Origin);
 		}
 		
 		public function SetOrigin(origin:Point):void

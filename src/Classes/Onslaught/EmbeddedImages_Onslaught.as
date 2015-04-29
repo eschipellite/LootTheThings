@@ -17,11 +17,15 @@ package Classes.Onslaught
 		[Embed(source="../../../content/Images/Classes/Onslaught/Onslaught_Sword.png")]
 		public static var Onslaught_Sword:Class;
 		
+		[Embed(source="../../../content/Images/Classes/Onslaught/Onslaught_AbilityOne_Attack.png")]
+		public static var Onslaught_AbilityOne_Attack:Class;
+		
 		public static function LoadImages():void
 		{
 			ImageLoader.InitializeImage(Onslaught_Selection);
-			ImageLoader.InitializeImage(Onslaught_Player);
+			ImageLoader.InitializeImage(Onslaught_Player, 6);
 			ImageLoader.InitializeImage(Onslaught_Sword);
+			ImageLoader.InitializeImage(Onslaught_AbilityOne_Attack);
 		}
 	}
 }
